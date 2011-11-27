@@ -1,6 +1,11 @@
-# Simple PHP Router class
+# PHP Router class
 
-A simple Router class that supports REST routing, named routes and reverse routing. 
+A simple Rails inspired PHP router class.
+
+* Usage of different HTTP Methods
+* REST / Resourceful routing
+* Reversed routing using named routes
+* Dynamic URL's: use URL segments as parameters.
 
 ## Usage
 
@@ -17,7 +22,6 @@ A simple Router class that supports REST routing, named routes and reverse routi
 
     // maps POST request to /users/ to controller 'users' and method 'create'
     $r->match('/users','users#create',array('via' => 'post'));
-
 
     // maps GET /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5 and saves route as a named route.
     $r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));

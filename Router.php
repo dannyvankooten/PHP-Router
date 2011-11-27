@@ -142,12 +142,11 @@ final class Router {
             // target not explicitly given
             // extract from url
             $target = explode('/', ltrim(str_replace($this->base_url,'',$request_url),'/'));
-            var_dump($target);
-
+  
             $controller = $target[0];
             $action = (isset($target[1])) ? $target[1] : 'index';
         }
-
+        
         $this->route_found = true;
         $this->route = array('controller' => $controller, 'action' => $action, 'params' => $params);
         return true;
@@ -161,13 +160,13 @@ final class Router {
      */
     public function resources($controller, array $args = array()) {
         $routes = array(
-            'index' => array($controller, "$controller#index", array('via' => 'GET')),
-            'new' => array("$controller/new", "$controller#new", array('via' => 'GET')),
-            'show' => array("$controller/:id", "$controller#show", array('via' => 'GET')),
-            'edit' => array("$controller/:id/edit", "$controller#edit", array('via' => 'GET')),
-            'update' => array("$controller/:id", "$controller#update", array('via' => 'PUT')),
-            'destroy' => array("$controller/:id", "$controller#destroy", array('via' => 'DELETE')),
-            'create' => array("$controller", "$controller#create", array('via' => 'POST'))
+            'index' => array("/".$controller, "$controller#index", array('via' => 'GET')),
+            'new' => array("/$controller/new", "$controller#new", array('via' => 'GET')),
+            'show' => array("/$controller/:id", "$controller#show", array('via' => 'GET')),
+            'edit' => array("/$controller/:id/edit", "$controller#edit", array('via' => 'GET')),
+            'update' => array("/$controller/:id", "$controller#update", array('via' => 'PUT')),
+            'destroy' => array("/$controller/:id", "$controller#destroy", array('via' => 'DELETE')),
+            'create' => array("/$controller", "$controller#create", array('via' => 'POST'))
         );
 
         

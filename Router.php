@@ -204,7 +204,7 @@ final class Router {
      * @param array $params Optional array of parameters to use in URL
      * @return string The url to the route
      */
-    public function url_for_route($route_name,array $params = array()) {
+    public function reverse($route_name,array $params = array()) {
         // Check if route exists
         if(!isset($this->named_routes[$route_name])) return false;
         

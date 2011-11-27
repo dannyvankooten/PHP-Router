@@ -23,17 +23,25 @@ A simple Router class that supports REST routing, named routes and reverse routi
     $r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
 
     // echoes /users/5/edit
-    echo $r->url_for_route('user_edit_page',array('id' => '5'));
+    echo $r->reverse('user_edit_page',array('id' => '5'));
+
+    // maps multiple routes
+    // GET /users will map to users#index
+    // GET /users/5 will map to users#show
+    $r->resources('users',array('only' => 'index,show'));
 
 
     if($r->hasRoute()) {
+        // extract controller, action and parameters.
         extract($r->getRoute());
+
         ?>
         <h1>Route found!</h1>
         <p><b>Controller: </b><?php echo $controller; ?></p>
         <p><b>Action: </b><?php echo $action; ?></p>
         <p><b>Params: </b><?php var_dump($params); ?></p>
         <?php
+
     } else {
         ?><h1>No route found.</h1><?php
     }

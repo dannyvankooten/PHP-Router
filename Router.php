@@ -107,7 +107,7 @@ final class Router {
 
         // check for matching URL
         $request_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $request_url = rtrim($request_url, '/');
+        $request_url = strtolower(rtrim($request_url, '/'));
 
         // setup route regex for route url
         $route_regex = preg_replace("/:(\w+)/", "(\w+)", $this->base_url.$route_url);
@@ -141,7 +141,8 @@ final class Router {
         } else {
             // target not explicitly given
             // extract from url
-            $target = explode('/', $request_url);
+            $target = explode('/', ltrim(str_replace($this->base_url,'',$request_url),'/'));
+            var_dump($target);
 
             $controller = $target[0];
             $action = (isset($target[1])) ? $target[1] : 'index';

@@ -19,7 +19,7 @@ A simple Router class that supports REST routing, named routes and reverse routi
     $r->match('/users','users#create',array('via' => 'post'));
 
 
-    // maps /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5.
+    // maps GET /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5 and saves route as a named route.
     $r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
 
     // echoes /users/5/edit

@@ -17,12 +17,16 @@ $r->match('/users','users#create',array('via' => 'post'));
 // maps /photos/show to controller 'photos' and method 'show'
 $r->match('/photos/show');
 
-// maps /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5.
+// maps GET /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5 and saves route as a named route.
 $r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
 
 // echoes /users/5/edit
-echo $r->url_for_route('user_edit_page',array('id' => '5'));
+echo $r->reverse('user_edit_page',array('id' => '5'));
 
+// maps multiple routes
+// GET /users will map to users#index
+// GET /users/5 will map to users#show
+$r->resources('users',array('only' => 'index,show'));
 
 if($r->hasRoute()) {
     extract($r->getRoute());

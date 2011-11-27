@@ -94,16 +94,17 @@ final class Router {
             $request_methods = explode(',', $args['via']);
 
             // hack to simulate DELETE and PUT requests
-            if (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method, array('PUT', 'DELETE'))) {
+            if ((isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) || isset($_GET['_method']) && $_method = strtoupper($_GET['_method'])) && in_array($_method, array('PUT', 'DELETE'))) {
                 $server_request_method = $_method;
             } else {
                 $server_request_method = $_SERVER['REQUEST_METHOD'];
             }
 
             // check if current request has the right method for this route. if not, return false.
-            if (!in_array($_SERVER['REQUEST_METHOD'], $request_methods))
+            if (!in_array($server_request_method, $request_methods))
                 return false;
         }
+
 
         // check for matching URL
         $request_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -115,6 +116,7 @@ final class Router {
         // check if request url matches route regex. if not, return false.
         if (!preg_match("@^{$route_regex}*$@", $request_url, $matches))
             return false;
+        
         
         // setup parameters
         $params = array();
@@ -160,13 +162,13 @@ final class Router {
      */
     public function resources($controller, array $args = array()) {
         $routes = array(
-            'index' => array("/".$controller, "$controller#index", array('via' => 'GET')),
-            'new' => array("/$controller/new", "$controller#new", array('via' => 'GET')),
-            'show' => array("/$controller/:id", "$controller#show", array('via' => 'GET')),
-            'edit' => array("/$controller/:id/edit", "$controller#edit", array('via' => 'GET')),
+            'create' => array("/$controller", "$controller#create", array('via' => 'POST')),
+            'index' => array("/".$controller, "$controller#index", array('via' => 'GET', 'as' => $controller)),
+            'new' => array("/$controller/new", "$controller#new", array('via' => 'GET', 'as' => $controller.'#new')),
             'update' => array("/$controller/:id", "$controller#update", array('via' => 'PUT')),
             'destroy' => array("/$controller/:id", "$controller#destroy", array('via' => 'DELETE')),
-            'create' => array("/$controller", "$controller#create", array('via' => 'POST'))
+            'show' => array("/$controller/:id", "$controller#show", array('via' => 'GET', 'as' => $controller.'#show')),
+            'edit' => array("/$controller/:id/edit", "$controller#edit", array('via' => 'GET'))
         );
 
         

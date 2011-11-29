@@ -24,7 +24,7 @@ A simple Rails inspired PHP router class.
     $r->match('/users','users#create',array('via' => 'post'));
 
     // maps GET /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5 and saves route as a named route.
-    $r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
+    $r->match('/users/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
 
     // echoes /users/5/edit
     echo $r->reverse('user_edit_page',array('id' => '5'));
@@ -49,5 +49,9 @@ A simple Rails inspired PHP router class.
     } else {
         ?><h1>No route found.</h1><?php
     }
+    
+    ?>   
 
-Have a look at example.php or read trough the class' documentation for a better understanding on how to use this class.
+
+## More information
+Have a look at the example file or read trough the class' documentation for a better understanding on how to use this class.

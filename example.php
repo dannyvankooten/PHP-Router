@@ -9,7 +9,7 @@ $r = new Router('/rest-router');
 $r->match('/','users#index');
 
 // maps /user/5 to controller 'users', method 'show' with parameter 'id' => 5
-$r->match('/user/:id','users#show');
+$r->match('/users/:id','users#show');
 
 // maps POST request to /users/ to controller 'users' and method 'create'
 $r->match('/users','users#create',array('via' => 'post'));
@@ -18,7 +18,7 @@ $r->match('/users','users#create',array('via' => 'post'));
 $r->match('/photos/show');
 
 // maps GET /users/5/edit to controller 'users', method 'edit' with parameters 'id' => 5 and saves route as a named route.
-$r->match('/user/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
+$r->match('/users/:id/edit','users#edit',array('via' => 'get', 'as' => 'user_edit_page'));
 
 // echoes /users/5/edit
 echo $r->reverse('user_edit_page',array('id' => '5'));

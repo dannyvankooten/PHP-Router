@@ -6,32 +6,32 @@
  * @author Danny
  */
 final class Router {
-    
+
     /**
      * Array to store named routes in, used for reverse routing.
      * @var array 
      */
     private $named_routes = array();
-    
+
     /**
      * Boolean whether a route has been matched.
      * @var boolean
      */
     private $route_found = false;
-    
+
     /**
      * The matched route. Contains an array with controller, action and optional parameter values.
      * @var array 
      */
     private $route = array();
-    
+
     /**
      * The base REQUEST_URI. Gets prepended to all route url's.
      * 
      * @var string
      */
     private $base_url = '';
-    
+
     /**
      * Creates an instance of the Router class
      * @param string $base_url Base url to prepend to all route url's (optional)
@@ -39,15 +39,15 @@ final class Router {
     public function __construct($base_url = '') {
         $this->base_url = $base_url;
     }
-    
+
     /**
      * Set the base url - gets prepended to all route url's.
      * @param string $base_url 
      */
     public function setBaseUrl($base_url) {
-       $this->base_url = $base_url;
+        $this->base_url = $base_url;
     }
-    
+
     /**
      * Has a route been matched?
      * @return boolean True if a route has been found, false if not. 
@@ -55,7 +55,7 @@ final class Router {
     public function hasRoute() {
         return $this->route_found;
     }
-    
+
     /**
      * Get array with data of the matched route.
      * @return array Array containing the controller, action and parameters of matched route. 
@@ -64,7 +64,6 @@ final class Router {
         return $this->route;
     }
 
-    
     /**
      * Match a route to the current REQUEST_URI. Returns true on succes (route matches), false on failure.
      * 
@@ -74,15 +73,16 @@ final class Router {
      * @return boolean True if route matches URL, false if not.
      */
     public function match($route_url, $target = '', array $args = array()) {
-              
+
         // check if this is a named route, if so, store it.
         if (isset($args['as'])) {
             $this->named_routes[$args['as']] = $route_url;
         }
-        
+
         // check if a route has already been found
         // if so, function doesn't have to run
-        if($this->route_found) return;
+        if ($this->route_found)
+            return;
 
         // check for matching method
         if (isset($args['via'])) {
@@ -111,13 +111,21 @@ final class Router {
         $request_url = strtolower(rtrim($request_url, '/'));
 
         // setup route regex for route url
-        $route_regex = preg_replace("/:(\w+)/", "(\w+)", $this->base_url.$route_url);
+        $route_regex = preg_replace_callback("/:(\w+)/", function($matches) use ($args) {
+            
+                    // does match have filter regex set?
+                    if (isset($args['filters']) && isset($matches[1]) && isset($args['filters'][$matches[1]])) {
+                        return $args['filters'][$matches[1]];
+                    }
+
+                    return "(\w+)";
+                }, $this->base_url . $route_url);
 
         // check if request url matches route regex. if not, return false.
         if (!preg_match("@^{$route_regex}*$@", $request_url, $matches))
             return false;
-        
-        
+
+
         // setup parameters
         $params = array();
 
@@ -138,22 +146,35 @@ final class Router {
             // target explicitly given
             $target = explode('#', $target);
 
-            $controller = $target[0];
-            $action = (isset($target[1])) ? $target[1] : 'index';
+            if (!isset($params['controller']))
+                $params['controller'] = $target[0];
+            if (!isset($params['action']))
+                $params['action'] = (isset($target[1])) ? $target[1] : 'index';
         } else {
             // target not explicitly given
             // extract from url
-            $target = explode('/', ltrim(str_replace($this->base_url,'',$request_url),'/'));
-  
-            $controller = $target[0];
-            $action = (isset($target[1])) ? $target[1] : 'index';
+            $target = explode('/', ltrim(str_replace($this->base_url, '', $request_url), '/'));
+
+            if (!isset($params['controller']))
+                $params['controller'] = $target[0];
+            if (!isset($params['action']))
+                $params['action'] = (isset($target[1])) ? $target[1] : 'index';
         }
-        
+
+
+        // If route had a :controller segment, use that segment as the target controller
+        $controller = $params['controller'];
+        unset($params['controller']);
+
+        // If route had a :action segment, use that segment as the target action
+        $action = $params['action'];
+        unset($params['action']);
+
         $this->route_found = true;
         $this->route = array('controller' => $controller, 'action' => $action, 'params' => $params);
         return true;
     }
-    
+
     /**
      * Matches REST URL's for a given controller
      * 
@@ -163,15 +184,15 @@ final class Router {
     public function resources($controller, array $args = array()) {
         $routes = array(
             'create' => array("/$controller", "$controller#create", array('via' => 'POST')),
-            'index' => array("/".$controller, "$controller#index", array('via' => 'GET', 'as' => $controller)),
-            'new' => array("/$controller/new", "$controller#new", array('via' => 'GET', 'as' => $controller.'#new')),
+            'index' => array("/" . $controller, "$controller#index", array('via' => 'GET', 'as' => $controller)),
+            'new' => array("/$controller/new", "$controller#new", array('via' => 'GET', 'as' => $controller . '#new')),
             'update' => array("/$controller/:id", "$controller#update", array('via' => 'PUT')),
             'destroy' => array("/$controller/:id", "$controller#destroy", array('via' => 'DELETE')),
-            'show' => array("/$controller/:id", "$controller#show", array('via' => 'GET', 'as' => $controller.'#show')),
+            'show' => array("/$controller/:id", "$controller#show", array('via' => 'GET', 'as' => $controller . '#show')),
             'edit' => array("/$controller/:id/edit", "$controller#edit", array('via' => 'GET'))
         );
 
-        
+
         if (isset($args['only'])) {
             // only route to specified methods
             $only = explode(',', $args['only']);
@@ -180,7 +201,7 @@ final class Router {
                 if (isset($routes[$o]))
                     $this->match($routes[$o][0], $routes[$o][1], $routes[$o][2]);
             }
-            
+
             // abandon
             return;
         } elseif (isset($args['except'])) {
@@ -192,13 +213,13 @@ final class Router {
                 unset($routes[$e]);
             }
         }
-        
+
         // loop all routes
         foreach ($routes as $r) {
             $this->match($r[0], $r[1], $r[2]);
         }
     }
-    
+
     /**
      * Reverse route a named route
      * 
@@ -206,14 +227,15 @@ final class Router {
      * @param array $params Optional array of parameters to use in URL
      * @return string The url to the route
      */
-    public function reverse($route_name,array $params = array()) {
+    public function reverse($route_name, array $params = array()) {
         // Check if route exists
-        if(!isset($this->named_routes[$route_name])) return false;
-        
+        if (!isset($this->named_routes[$route_name]))
+            return false;
+
         $route_url = $this->named_routes[$route_name];
-        
+
         // replace route url with given parameters
-        if($params && preg_match_all("/:(\w+)/", $route_url, $param_keys)) {
+        if ($params && preg_match_all("/:(\w+)/", $route_url, $param_keys)) {
 
             // grab array with matches
             $param_keys = $param_keys[1];
@@ -221,13 +243,11 @@ final class Router {
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $i => $key) {
                 if (isset($params[$key]))
-                    $route_url = preg_replace("/:(\w+)/",$params[$key],$route_url,1);
+                    $route_url = preg_replace("/:(\w+)/", $params[$key], $route_url, 1);
             }
         }
-        
-        return $route_url;
-          
-    }
 
+        return $route_url;
+    }
 
 }

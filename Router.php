@@ -108,7 +108,7 @@ final class Router {
 
         // check for matching URL
         $request_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $request_url = strtolower(rtrim($request_url, '/'));
+        $request_url = rtrim($request_url, '/');
 
         // setup route regex for route url
         $route_regex = preg_replace_callback("/:(\w+)/", function($matches) use ($args) {
@@ -122,7 +122,7 @@ final class Router {
                 }, $this->base_url . $route_url);
 
         // check if request url matches route regex. if not, return false.
-        if (!preg_match("@^{$route_regex}*$@", $request_url, $matches))
+        if (!preg_match("@^{$route_regex}*$@i", $request_url, $matches))
             return false;
 
 

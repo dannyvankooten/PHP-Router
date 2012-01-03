@@ -31,6 +31,8 @@ final class Router {
      * @var string
      */
     private $base_url = '';
+    
+    private $route_args = array();
 
     /**
      * Creates an instance of the Router class
@@ -73,7 +75,7 @@ final class Router {
      * @return boolean True if route matches URL, false if not.
      */
     public function match($route_url, $target = '', array $args = array()) {
-
+        
         // check if this is a named route, if so, store it.
         if (isset($args['as'])) {
             $this->named_routes[$args['as']] = $route_url;
@@ -109,17 +111,12 @@ final class Router {
         // check for matching URL
         $request_url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $request_url = rtrim($request_url, '/');
-
+        
+         // store route filter arguments as instance variable so callback function can access them later on
+        $this->route_args = $args;
+        
         // setup route regex for route url
-        $route_regex = preg_replace_callback("/:(\w+)/", function($matches) use ($args) {
-            
-                    // does match have filter regex set?
-                    if (isset($args['filters']) && isset($matches[1]) && isset($args['filters'][$matches[1]])) {
-                        return $args['filters'][$matches[1]];
-                    }
-
-                    return "(\w+)";
-                }, $this->base_url . $route_url);
+        $route_regex = preg_replace_callback("/:(\w+)/", array(&$this, 'setup_filter_regex'), $this->base_url . $route_url);
 
         // check if request url matches route regex. if not, return false.
         if (!preg_match("@^{$route_regex}*$@i", $request_url, $matches))
@@ -173,6 +170,22 @@ final class Router {
         $this->route_found = true;
         $this->route = array('controller' => $controller, 'action' => $action, 'params' => $params);
         return true;
+    }
+    
+    /**
+     * Used as a callback in preg_replace_callback to substitute default regex with custom regex specified by the 'filter' argument.
+     * 
+     * @param array $matches
+     * @return string 
+     */
+    private function setup_filter_regex($matches) {
+        
+        // does match have filter regex set?
+        if (isset($this->route_args['filters']) && isset($matches[1]) && isset($this->route_args['filters'][$matches[1]])) {
+            return $this->route_args['filters'][$matches[1]];
+        }
+        
+        return "(\w+)";
     }
 
     /**

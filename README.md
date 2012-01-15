@@ -24,9 +24,9 @@ A simple Rails inspired PHP router class.
     $params = $router->matchCurrentRequest();
     var_dump($params);
 
-?><h3>Reversed routing</h3><?php 
-// echoes /users/5/edit
-echo "Route for user_edit_page with ID 5: ". $router->reverse('user_edit_page', array('id' => '5'));
+    ?><h3>Reversed routing</h3><?php 
+    // echoes /users/5/edit
+    echo "Route for user_edit_page with ID 5: ". $router->reverse('user_edit_page', array('id' => '5'));
 
 
 ## More information

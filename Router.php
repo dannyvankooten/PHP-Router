@@ -29,26 +29,6 @@ class Router {
         $this->basePath = $basePath;
     }
 
-    /**
-     * Has a route been matched?
-     * @return boolean True if a route has been found, false if not. 
-     */
-    public function isRouteMatched() {
-        return $this->routeMatched;
-    }
-
-    public function getArguments() {
-        return $this->arguments;
-    }
-
-    /**
-     * Get array with data of the matched route.
-     * @return array Array containing the controller, action and parameters of matched route. 
-     */
-    public function getMatchedRoute() {
-        return $this->matchedRoute;
-    }
-
     public function addRoute(Route $route) {
         $this->routes[] = $route;
     }
@@ -116,11 +96,22 @@ class Router {
             }
 
             if ($route->getTarget() !== null) {
-                // route has an explicit target
+                // target explicitly given
                 $target = explode('#', $route->getTarget());
+
+                if (!isset($params['controller']))
+                    $params['controller'] = $target[0];
+                if (!isset($params['action']))
+                    $params['action'] = (isset($target[1])) ? $target[1] : 'index';
             } else {
-                // route has no explicit target, extract it from the request URL
-                $target = explode('/', ltrim(str_replace($this->basePath, '', $requestUrl), '/')); 
+                // target not explicitly given
+                // extract from url
+                $target = explode('/', ltrim(str_replace($this->basePath, '', $requestUrl), '/'));
+
+                if (!isset($params['controller']))
+                    $params['controller'] = $target[0];
+                if (!isset($params['action']))
+                    $params['action'] = (isset($target[1])) ? $target[1] : 'index';
             }
 
             $matched = true;

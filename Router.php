@@ -16,29 +16,11 @@ class Router {
     private $namedRoutes = array();
 
     /**
-     * Boolean whether a route has been matched.
-     * @var boolean
-     */
-    private $routeMatched = false;
-
-    /**
-     * The matched route. Contains an array with controller, action and optional parameter values.
-     * @var array 
-     */
-    private $matchedRoute = array();
-
-    /**
      * The base REQUEST_URI. Gets prepended to all route url's.
      * @var string
      */
     private $basePath = '';
     
-    /**
-    * Temporary variable to store route arguments for usage inside the regex callback
-    * @var array
-    */
-    private $arguments = array();
-
     /**
      * Set the base url - gets prepended to all route url's.
      * @param string $base_url 
@@ -94,26 +76,31 @@ class Router {
         $this->routes[] = $route;
     }
 
-    public function execute() {
-
+    public function matchCurrentRequest() {
         $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
 
-        $requestUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $requestUrl = rtrim($requestUrl, '/');
+        return $this->match($_SERVER['REQUEST_URI'], $requestMethod);
+    }
+
+    public function match($requestUrl, $requestMethod = 'GET') {
+        
+        $matched = false; 
                 
         foreach($this->routes as $route) {
             
             // if route has been given a name, store it in the namedRoutes array
             if($route->getName() !== null) { $this->namedRoutes[$route->getName()] = $route; }
 
-            // don't do anything if a route has already been found
-            if($this->routeMatched) continue;
+            // don't do anything if a route has already been matched
+            if($matched) continue;
 
             // compare server request method with route's allowed http methods
             if(!in_array($requestMethod, $route->getMethods())) continue;
 
             // check if request url matches route regex. if not, return false.
             if (!preg_match("@^".$route->getRegex()."*$@i", $requestUrl, $matches)) continue;
+
+            $params = array();
 
             if (preg_match_all("/:(\w+)/", $route->getUrl(), $argument_keys)) {
 
@@ -123,7 +110,7 @@ class Router {
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {
                     if (isset($matches[$key + 1]))
-                        $this->arguments[$name] = $matches[$key + 1];
+                        $params[$name] = $matches[$key + 1];
                 }
 
             }
@@ -136,13 +123,14 @@ class Router {
                 $target = explode('/', ltrim(str_replace($this->basePath, '', $requestUrl), '/')); 
             }
 
-            $this->targetController = $target[0];
-            $this->targetAction = (isset($target[1])) ? $target[1] : 'index';
-
-            $this->routeMatched = true;
-            $this->matchedRoute = $route;
-
+            $matched = true;
         }
+
+        if($matched) {
+            return $params;
+        }
+
+        return false;
 
     }
 

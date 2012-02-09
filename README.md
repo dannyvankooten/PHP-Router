@@ -27,8 +27,8 @@ A simple Rails inspired PHP router class.
     $target = $router->matchCurrentRequest();
     var_dump($target);
 
-   // generate an URL 
-   $router->generate('users_edit', array('id' => 5));
+    // generate an URL 
+    $router->generate('users_edit', array('id' => 5));
 
 
 ## More information

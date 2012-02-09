@@ -2,11 +2,13 @@
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
- *
- * @author Danny
  */
 class Router {
 
+    /**
+    * Array that holds all Route objects
+    * @var array
+    */ 
     private $routes = array();
 
     /**
@@ -26,13 +28,17 @@ class Router {
      * @param string $base_url 
      */
     public function setBasePath($basePath) {
-        $this->basePath = $basePath;
+        $this->basePath = (string) $basePath;
     }
 
-    public function addRoute(Route $route) {
-        $this->routes[] = $route;
-    }
-
+    /**
+    * Route factory method
+    *
+    * Maps the given URL to the given target.
+    * @param string $routeUrl string
+    * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn *      this into a filename, controller / action pair, etc..
+    * @param array $args Array of optional arguments.
+    */
     public function map($routeUrl, $target = '', array $args = array()) {
         $route = new Route();
 
@@ -51,29 +57,30 @@ class Router {
 
         if(isset($args['name'])) {
             $route->setName($args['name']);
+            $this->namedRoutes[$route->getName()] = $route;
         }
 
         $this->routes[] = $route;
     }
 
+    /**
+    * Matches the current request against mapped routes
+    */
     public function matchCurrentRequest() {
         $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
 
         return $this->match($_SERVER['REQUEST_URI'], $requestMethod);
     }
 
+    /**
+    * Match given request url and request method and see if a route has been defined for it
+    * If so, return route's target
+    * If called multiple times
+    */
     public function match($requestUrl, $requestMethod = 'GET') {
-        
-        $matched = false; 
-                
+                        
         foreach($this->routes as $route) {
             
-            // if route has been given a name, store it in the namedRoutes array
-            if($route->getName() !== null) { $this->namedRoutes[$route->getName()] = $route; }
-
-            // don't do anything if a route has already been matched
-            if($matched) continue;
-
             // compare server request method with route's allowed http methods
             if(!in_array($requestMethod, $route->getMethods())) continue;
 
@@ -95,44 +102,14 @@ class Router {
 
             }
 
-            if ($route->getTarget() !== null) {
-                // target explicitly given
-                $target = explode('#', $route->getTarget());
-
-                if (!isset($params['controller']))
-                    $params['controller'] = $target[0];
-                if (!isset($params['action']))
-                    $params['action'] = (isset($target[1])) ? $target[1] : 'index';
-            } else {
-                // target not explicitly given
-                // extract from url
-                $target = explode('/', ltrim(str_replace($this->basePath, '', $requestUrl), '/'));
-
-                if (!isset($params['controller']))
-                    $params['controller'] = $target[0];
-                if (!isset($params['action']))
-                    $params['action'] = (isset($target[1])) ? $target[1] : 'index';
-            }
-
-            $matched = true;
-        }
-
-        if($matched) {
-            return $params;
+            return $route->getTarget();
+            
         }
 
         return false;
-
     }
 
-    /**
-     * Match a route to the current REQUEST_URI. Returns true on succes (route matches), false on failure.
-     * 
-     * @param string $route_url The URL of the route to match, must start with a leading slash. Dynamic URL value's must start with a colon. 
-     * @param string $target The controller and action to map this route_url to, seperated by a hash (#). The action value defaults to 'index'. (optional)
-     * @param array $args Accepts two keys, 'via' and 'as'. 'via' accepts a comma seperated list of HTTP Methods for this route. 'as' accepts a string and will be used as the name of this route.
-     * @return boolean True if route matches URL, false if not.
-     */
+
     
     /**
      * Reverse route a named route
@@ -141,7 +118,7 @@ class Router {
      * @param array $params Optional array of parameters to use in URL
      * @return string The url to the route
      */
-    public function reverse($routeName, array $params = array()) {
+    public function generate($routeName, array $params = array()) {
         // Check if route exists
         if (!isset($this->namedRoutes[$routeName]))
             throw new Exception("No route with the name $routeName has been found.");

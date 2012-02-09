@@ -2,11 +2,34 @@
 
 class Route {
 	
+	/**
+	* URL of this Route
+	* @var string
+	*/
 	private $url;
+
+	/**
+	* Accepted HTTP methods for this route
+	* @var array
+	*/
 	private $methods = array('GET','POST','PUT','DELETE');
+
+	/**
+	* Target for this route, can be anything.
+	* @var mixed
+	*/
 	private $target;
+
+	/**
+	* The name of this route, used for reversed routing
+	* @var string
+	*/
 	private $name;
-	private $regex;
+
+	/**
+	* Custom parameter filters for this route
+	* @var array
+	*/
 	private $filters = array();
 
 	public function getUrl() {
@@ -38,7 +61,7 @@ class Route {
 	}
 
 	public function setName($name) {
-		$this->name = $name;
+		$this->name = (string) $name;
 	}
 
 	public function setFilters(array $filters) {

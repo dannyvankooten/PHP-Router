@@ -9,14 +9,13 @@ $router->setBasePath('/PHP-Router');
 $router->map('/', 'someController:indexAction', array('methods' => 'GET'));
 $router->map('/users/:id/edit/', 'users#edit', array('methods' => 'GET', 'name' => 'users_edit'));
 $router->map('/contact/',array('controller' => 'someController', 'action' => 'contactAction'), array('name' => 'contact'));
-$router-> map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
-$router-> map('/users/','users#list', array('methods' => 'GET', 'name' => 'users_list'));
+$router->map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
+$router->map('/users/','users#list', array('methods' => 'GET', 'name' => 'users_list'));
 
 ?><h3>Current URL & HTTP method would route to: </h3>
 <pre><?php var_dump($router->matchCurrentRequest()); ?></pre>
 
 <h3>Try out these URL's.</h3>
-
 <p><a href="<?php echo $router->generate('users_edit', array('id' => 5)); ?>"><?php echo $router->generate('users_edit', array('id' => 5)); ?></a></p>
 <p><a href="<?php echo $router->generate('contact'); ?>"><?php echo $router->generate('contact'); ?></a></p>
 <p><form action="" method="POST"><input type="submit" value="Post request to current URL" /></form></p>

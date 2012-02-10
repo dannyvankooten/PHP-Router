@@ -32,11 +32,22 @@ class Route {
 	*/
 	private $filters = array();
 
+	/**
+	* Array containing parameters passed through request URL
+	* @var array
+	*/
+	private $params = array();
+
 	public function getUrl() {
 		return $this->url;
 	}
 
 	public function setUrl($url) {
+		$url = (string) $url;
+
+		// make sure that the URL is suffixed with a forward slash
+		if(substr($url,-1) !== '/') $url .= '/';
+		
 		$this->url = $url;
 	}
 
@@ -78,6 +89,14 @@ class Route {
         }
         
         return "(\w+)";
+	}
+
+	public function getParameters() {
+		return $this->parameters;
+	}
+
+	public function setParameters(array $parameters) {
+		$this->parameters = $parameters;
 	}
 
 

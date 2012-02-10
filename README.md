@@ -23,6 +23,9 @@ A simple Rails inspired PHP router class.
     // or somewhat more complicated
     $router->map('/users/:id/edit/', array('controller' => 'SomeController', 'action' => 'someAction'), array('methods' => 'GET,PUT', 'name' => 'users_edit'));
 
+    // You can even specify closures as the Route's target
+    $router->map('/hello/:name', function($name) { echo "Hello $name."; });
+
     // match current request URL & http method
     $target = $router->matchCurrentRequest();
     var_dump($target);

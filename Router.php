@@ -102,7 +102,9 @@ class Router {
 
             }
 
-            return $route->getTarget();
+            $route->setParameters($params);
+
+            return $route;
             
         }
 

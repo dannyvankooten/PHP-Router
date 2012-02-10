@@ -5,15 +5,21 @@ require 'Route.php';
 $router = new Router();
 $router->setBasePath('/PHP-Router');
 
-// maps / to controller 'users' and method 'index'.
 $router->map('/', 'someController:indexAction', array('methods' => 'GET'));
 $router->map('/users/:id/edit/', 'users#edit', array('methods' => 'GET', 'name' => 'users_edit'));
 $router->map('/contact/',array('controller' => 'someController', 'action' => 'contactAction'), array('name' => 'contact'));
 $router->map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
 $router->map('/users/','users#list', array('methods' => 'GET', 'name' => 'users_list'));
 
+$route = $router->matchCurrentRequest();
+
 ?><h3>Current URL & HTTP method would route to: </h3>
-<pre><?php var_dump($router->matchCurrentRequest()); ?></pre>
+<?php if($route) { ?>
+	<pre><?php var_dump($route->getTarget()); ?></pre>
+	<pre><?php var_dump($route->getParameters()); ?></pre>
+<?php } else { ?>
+	<pre>No route matched.</pre>
+<?php } ?>
 
 <h3>Try out these URL's.</h3>
 <p><a href="<?php echo $router->generate('users_edit', array('id' => 5)); ?>"><?php echo $router->generate('users_edit', array('id' => 5)); ?></a></p>

@@ -6,7 +6,8 @@
 *.exe
 *.o
 *.so
-*.sublime-*
+*.sublime-project
+*.sublime-workspace
 
 # Packages #
 ############

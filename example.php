@@ -10,6 +10,7 @@ $router->map('/users/:id/edit/', 'users#edit', array('methods' => 'GET', 'name' 
 $router->map('/contact/',array('controller' => 'someController', 'action' => 'contactAction'), array('name' => 'contact'));
 $router->map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
 $router->map('/users/','users#list', array('methods' => 'GET', 'name' => 'users_list'));
+$router->map('/path-with-hyphens', 'some#target');
 
 $route = $router->matchCurrentRequest();
 

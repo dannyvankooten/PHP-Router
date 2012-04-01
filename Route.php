@@ -85,10 +85,10 @@ class Route {
 
 	private function substituteFilter($matches) {
 		if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
-            return $this->filters[$matches[1]];
-        }
+        		return $this->filters[$matches[1]];
+        	}
         
-        return "(\w+)";
+        	return "(\w+)";
 	}
 
 	public function getParameters() {

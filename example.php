@@ -11,6 +11,7 @@ $router->map('/contact/',array('controller' => 'someController', 'action' => 'co
 $router->map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
 $router->map('/users/','users#list', array('methods' => 'GET', 'name' => 'users_list'));
 $router->map('/path-with-hyphens', 'some#target');
+$router->map('/site-section/:path/','some#target',array( 'filters' => array( 'path' => '(.*)') ) );
 
 $route = $router->matchCurrentRequest();
 

@@ -68,8 +68,14 @@ class Router {
     */
     public function matchCurrentRequest() {
         $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+        $requestUrl = $_SERVER['REQUEST_URI'];
 
-        return $this->match($_SERVER['REQUEST_URI'], $requestMethod);
+        // strip GET variables from URL
+        if(($pos = strpos($requestUrl, '?')) !== false) {
+            $requestUrl =  substr($requestUrl, 0, $pos);
+        }
+
+        return $this->match($requestUrl, $requestMethod);
     }
 
     /**

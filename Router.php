@@ -57,7 +57,9 @@ class Router {
 
         if(isset($args['name'])) {
             $route->setName($args['name']);
-            $this->namedRoutes[$route->getName()] = $route;
+            if (!isset($this->namedRoutes[$route->getName()])) {
+                $this->namedRoutes[$route->getName()] = $route;
+            }
         }
 
         $this->routes[] = $route;

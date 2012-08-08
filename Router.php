@@ -110,6 +110,9 @@ class Router {
 
             }
 
+            $params['requestMethod'] = $requestMethod;
+            $params['requestURL'] = $requestUrl;
+            
             $route->setParameters($params);
 
             return $route;

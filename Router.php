@@ -7,11 +7,11 @@ class Router
 {
 	/**
 	 * @var array Holds all Route objects
-	 */ 
+	 */
 	protected $routes = array();
 
 	/**
-	 * @var array Named routes, used for reverse routing. 
+	 * @var array Named routes, used for reverse routing.
 	 */
 	protected $namedRoutes = array();
 
@@ -19,7 +19,7 @@ class Router
 	 * @var string The base REQUEST_URI. Gets prepended to all route url's.
 	 */
 	protected $basePath;
-	
+
 	/**
 	 * @param string $basePath Set the base url - gets prepended to all route url's
 	 * @return Router
@@ -35,7 +35,8 @@ class Router
 	 *
 	 * Maps the given URL to the given target.
 	 * @param string $routeUrl string
-	 * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn *	  this into a filename, controller / action pair, etc..
+	 * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn
+	 * this into a filename, controller / action pair, etc..
 	 * @param array $args Array of optional arguments.
 	 * @return Router
 	 */
@@ -125,7 +126,7 @@ class Router
 
 	/**
 	 * Reverse route a named route
-	 * 
+	 *
 	 * @param string $routeName The name of the route to reverse route.
 	 * @param array $params Optional array of parameters to use in URL
 	 * @return string The url to the route

@@ -29,7 +29,7 @@ class Route
 	/**
 	 * @var array Array containing parameters passed through request URL
 	 */
-	protected $params = array();
+	protected $parameters = array();
 
 	/**
 	 * Get the url for this route
@@ -53,7 +53,7 @@ class Route
 		if (substr($url, -1) !== '/') {
 			$url .= '/';
 		}
-		
+
 		$this->url = $url;
 		return $this;
 	}
@@ -146,7 +146,7 @@ class Route
 		if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
 			return $this->filters[$matches[1]];
 		}
-		
+
 		return '([\w-]+)';
 	}
 

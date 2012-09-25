@@ -1,105 +1,171 @@
 <?php
-
-class Route {
-	
+class Route
+{
 	/**
-	* URL of this Route
-	* @var string
-	*/
-	private $url;
+	 * @var string URL of this route
+	 */
+	protected $url;
 
 	/**
-	* Accepted HTTP methods for this route
-	* @var array
-	*/
-	private $methods = array('GET','POST','PUT','DELETE');
+	 * @var array Accepted HTTP methods for this route
+	 */
+	protected $methods = array('GET', 'POST', 'PUT', 'DELETE');
 
 	/**
-	* Target for this route, can be anything.
-	* @var mixed
-	*/
-	private $target;
+	 * @var mixed target for this route, can be anything
+	 */
+	protected $target;
 
 	/**
-	* The name of this route, used for reversed routing
-	* @var string
-	*/
-	private $name;
+	 * @var string The name of this route, used for reverse routing
+	 */
+	protected $name;
 
 	/**
-	* Custom parameter filters for this route
-	* @var array
-	*/
-	private $filters = array();
+	 * @var array Custom parameter filters for this route
+	 */
+	protected $filters = array();
 
 	/**
-	* Array containing parameters passed through request URL
-	* @var array
-	*/
-	private $params = array();
+	 * @var array Array containing parameters passed through request URL
+	 */
+	protected $params = array();
 
-	public function getUrl() {
+	/**
+	 * Get the url for this route
+	 * @return string
+	 */
+	public function getUrl()
+	{
 		return $this->url;
 	}
 
-	public function setUrl($url) {
+	/**
+	 * Set the url
+	 * @param string $url
+	 * @return Route
+	 */
+	public function setUrl($url)
+	{
 		$url = (string) $url;
 
 		// make sure that the URL is suffixed with a forward slash
-		if(substr($url,-1) !== '/') $url .= '/';
+		if (substr($url, -1) !== '/') {
+			$url .= '/';
+		}
 		
 		$this->url = $url;
+		return $this;
 	}
 
-	public function getTarget() {
+	/**
+	 * Gets the target
+	 * @return string
+	 */
+	public function getTarget()
+	{
 		return $this->target;
 	}
 
-	public function setTarget($target) {
+	public function setTarget($target)
+	{
 		$this->target = $target;
+		return $this;
 	}
 
-	public function getMethods() {
+	/**
+	 * Get array of methods
+	 * @return array
+	 */
+	public function getMethods()
+	{
 		return $this->methods;
 	}
 
-	public function setMethods(array $methods) {
+	/**
+	 * set array of methods
+	 * @param array $methods
+	 * @return Route
+	 */
+	public function setMethods(array $methods)
+	{
 		$this->methods = $methods;
+		return $this;
 	}
 
-	public function getName() {
+	/**
+	 * Get the route name
+	 * @return string
+	 */
+	public function getName()
+	{
 		return $this->name;
 	}
 
-	public function setName($name) {
+	/**
+	 * Set the route name
+	 * @param string $name
+	 * @return Route
+	 */
+	public function setName($name)
+	{
 		$this->name = (string) $name;
 	}
 
-	public function setFilters(array $filters) {
+	/**
+	 * Get the filters
+	 * @return array
+	 */
+	public function getFilters()
+	{
+		return $this->filters;
+	}
+
+	/**
+	 * Set the array of filters
+	 * @param array $filters
+	 * @return Route
+	 */
+	public function setFilters(array $filters)
+	{
 		$this->filters = $filters;
+		return $this;
 	}
 
-	public function getRegex() {
-		return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->url);
+	public function getRegex()
+	{
+		return preg_replace_callback('/:(\w+)/', array(&$this, 'substituteFilter'), $this->url);
 	}
 
-	private function substituteFilter($matches) {
+	/**
+	 * @return string
+	 */
+	protected function substituteFilter($matches)
+	{
 		if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
-        		return $this->filters[$matches[1]];
-        	}
-        
-        	return "([\w-]+)";
+			return $this->filters[$matches[1]];
+		}
+		
+		return '([\w-]+)';
 	}
 
-	public function getParameters() {
+	/**
+	 * Get array of parameters
+	 * @return array
+	 */
+	public function getParameters()
+	{
 		return $this->parameters;
 	}
 
-	public function setParameters(array $parameters) {
+	/**
+	 * set array of parameters
+	 * @param array $parameters
+	 * @return Route
+	 */
+	public function setParameters(array $parameters)
+	{
 		$this->parameters = $parameters;
+		return $this;
 	}
-
-
-
-
 }

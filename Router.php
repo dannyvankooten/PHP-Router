@@ -67,6 +67,7 @@ class Router
 
 	/**
 	 * Matches the current request against mapped routes
+	 * @return Route
 	 */
 	public function matchCurrentRequest()
 	{
@@ -116,7 +117,6 @@ class Router
 			}
 
 			$route->setParameters($params);
-
 			return $route;
 		}
 

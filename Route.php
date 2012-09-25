@@ -110,6 +110,7 @@ class Route
 	public function setName($name)
 	{
 		$this->name = (string) $name;
+		return $this;
 	}
 
 	/**

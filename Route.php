@@ -169,4 +169,15 @@ class Route
 		$this->parameters = $parameters;
 		return $this;
 	}
+
+	/**
+	 * Fetch a parameter
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function getParameter($key)
+	{
+		return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
+	}
 }

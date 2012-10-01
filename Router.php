@@ -93,7 +93,7 @@ class Router
 	 */
 	public function match($requestUrl, $requestMethod = 'GET')
 	{
-		foreach($this->routes as $route) {
+		foreach ($this->routes as $route) {
 			// compare server request method with route's allowed http methods
 			if (!in_array($requestMethod, $route->getMethods())) {
 				continue;

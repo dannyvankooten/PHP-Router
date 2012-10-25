@@ -107,8 +107,9 @@ class Router
 
 				// loop trough parameter names, store matching value in $params array
 				foreach ($argumentKeys as $key => $name) {
-					if (isset($matches[$key + 1]))
+					if (isset($matches[$key + 1])) {
 						$params[$name] = $matches[$key + 1];
+					}
 				}
 			}
 

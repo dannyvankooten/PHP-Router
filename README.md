@@ -1,43 +1,33 @@
-# PHP Router class
+AS Router class
+================
 
 A simple Rails inspired PHP router class.
 
 * Usage of different HTTP Methods
 * REST / Resourceful routing
-* Reversed routing using named routes
+* Reversed routing
 * Dynamic URL's: use URL segments as parameters.
 
-## Usage
+Info
+----
 
-    <?php
-    require 'Router.php';
-    require 'Route.php';
+AS Router is a fork of the [PHP Router](//github.com/dannyvankooten/PHP-Router) class by Danny van Kooten.
 
-    $router = new Router();
+It was incorporated in AfroSoft's custom website framework and modified to fit our needs. We are releasing it back under the same license (MIT).
 
-    $router->setBasePath('/PHP-Router');
+Usage
+-----
 
-    // defining routes can be as simple as this
-    $router->map('/', 'users#index');
+See examples/main.php for usage
 
-    // or somewhat more complicated
-    $router->map('/users/:id/edit/', array('controller' => 'SomeController', 'action' => 'someAction'), array('methods' => 'GET,PUT', 'name' => 'users_edit', 'filters' => array('id' => '(\d+)')));
+More Information
+----------------
 
-    // You can even specify closures as the Route's target
-    $router->map('/hello/:name', function($name) { echo "Hello $name."; });
+There is more information about the functions are capabilites in the documentation included with the code (phpdoc).
 
-    // match current request URL & http method
-    $target = $router->matchCurrentRequest();
-    var_dump($target);
+License
+-------
 
-    // generate an URL 
-    $router->generate('users_edit', array('id' => 5));
-
-
-## More information
-Have a look at the example.php file or read trough the class' documentation for a better understanding on how to use this class.
-
-If you like PHP Router you might also like [AltoRouter](//github.com/dannyvankooten/AltoRouter).
-
-## License
 MIT Licensed, http://www.opensource.org/licenses/MIT
+
+You should have gotten a copy of the license in the file LICENSE.

@@ -92,11 +92,11 @@ class Route {
 	}
 
 	public function getParameters() {
-		return $this->parameters;
+		return $this->params;
 	}
 
-	public function setParameters(array $parameters) {
-		$this->parameters = $parameters;
+	public function setParameters(array $params) {
+		$this->params = $params;
 	}
 
 

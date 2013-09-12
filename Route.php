@@ -36,7 +36,7 @@ class Route {
 	* Array containing parameters passed through request URL
 	* @var array
 	*/
-	private $params = array();
+	private $parameters = array();
 
 	public function getUrl() {
 		return $this->url;

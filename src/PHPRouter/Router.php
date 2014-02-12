@@ -1,7 +1,6 @@
 <?php
 namespace PHPRouter;
 
-use ReflectionObject;
 use Exception;
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
@@ -34,48 +33,11 @@ class Router
 
     /**
      * Set the base _url - gets prepended to all route _url's.
-     * @param string $base_url 
+     * @param $basePath
      */
     public function setBasePath($basePath)
     {
         $this->_basePath = (string) $basePath;
-    }
-
-    /**
-    * Route factory method
-    *
-    * Maps the given URL to the given target.
-    * @param string $routeUrl string
-    * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn *      this into a filename, controller / action pair, etc..
-    * @param array $args Array of optional arguments.
-    */
-    public function map($routeUrl, $target = '', array $args = array())
-    {
-        $route = new Route($this->_basePath . $routeUrl, array(
-           '_controller' => 'asd'
-
-        ));
-
-
-        $route->setTarget($target);
-
-        if(isset($args['methods'])) {
-            $methods = explode(',', $args['methods']);
-            $route->setMethods($methods);
-        }
-
-        if(isset($args['filters'])) {
-            $route->setFilters($args['filters']);
-        }
-
-        if(isset($args['name'])) {
-            $route->setName($args['name']);
-            if (!isset($this->_namedRoutes[$route->getName()])) {
-                $this->_namedRoutes[$route->getName()] = $route;
-            }
-        }
-
-        $this->_routes->add($routeUrl ,$route);
     }
 
     /**

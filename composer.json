@@ -1,0 +1,20 @@
+{
+   "name": "dannyvankooten/PHP-Router",
+   "description": "Simple PHP Router, supports REST and reverse routing.",
+   "keywords": ["router", "routing", "php", "rest"],
+   "homepage": "https://github.com/dannyvankooten/PHP-Router",
+   "license": "MIT",
+   "authors": [
+      {
+         "name": "Danny van Kooten",
+         "email": "dannyvankooten@gmail.com",
+         "homepage": "http://dannyvankooten.com/"
+      }
+   ],
+   "require": {
+      "php": ">=5.3.0"
+   },
+   "autoload": {
+      "classmap": ["Router.php", "Route.php"]
+   }
+}

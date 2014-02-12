@@ -13,7 +13,7 @@ class Route
 	* Accepted HTTP methods for this route
 	* @var array
 	*/
-	private $_methods = array('GET','POST','PUT','DELETE');
+	private $_methods = array('GET', 'POST', 'PUT', 'DELETE');
 
 	/**
 	* Target for this route, can be anything.
@@ -38,6 +38,13 @@ class Route
 	* @var array
 	*/
 	private $_parameters = array();
+
+    public function __construct($resource, array $config)
+    {
+        $this->_url = $resource;
+        $this->_config = $config;
+        $this->_methods = isset($config['methods']) ? $config['methods'] : array();
+    }
 
 	public function getUrl()
     {
@@ -91,7 +98,7 @@ class Route
 
 	public function getRegex()
     {
-		return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->_url);
+       return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->_url);
 	}
 
 	private function substituteFilter($matches)

@@ -1,5 +1,5 @@
 {
-   "name": "dannyvankooten/PHP-Router",
+   "name": "dannyvankooten/php-router",
    "description": "Simple PHP Router, supports REST and reverse routing.",
    "keywords": ["router", "routing", "php", "rest"],
    "homepage": "https://github.com/dannyvankooten/PHP-Router",

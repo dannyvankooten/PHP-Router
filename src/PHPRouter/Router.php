@@ -1,34 +1,36 @@
 <?php
+namespace PHPRouter;
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
  */
-class Router {
-
+class Router
+{
     /**
     * Array that holds all Route objects
     * @var array
     */ 
-    private $routes = array();
+    private $_routes = array();
 
     /**
      * Array to store named routes in, used for reverse routing.
      * @var array 
      */
-    private $namedRoutes = array();
+    private $_namedRoutes = array();
 
     /**
-     * The base REQUEST_URI. Gets prepended to all route url's.
+     * The base REQUEST_URI. Gets prepended to all route _url's.
      * @var string
      */
-    private $basePath = '';
+    private $_basePath = '';
     
     /**
-     * Set the base url - gets prepended to all route url's.
+     * Set the base _url - gets prepended to all route _url's.
      * @param string $base_url 
      */
-    public function setBasePath($basePath) {
-        $this->basePath = (string) $basePath;
+    public function setBasePath($basePath)
+    {
+        $this->_basePath = (string) $basePath;
     }
 
     /**
@@ -39,10 +41,11 @@ class Router {
     * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn *      this into a filename, controller / action pair, etc..
     * @param array $args Array of optional arguments.
     */
-    public function map($routeUrl, $target = '', array $args = array()) {
+    public function map($routeUrl, $target = '', array $args = array())
+    {
         $route = new Route();
 
-        $route->setUrl($this->basePath . $routeUrl);
+        $route->setUrl($this->_basePath . $routeUrl);
 
         $route->setTarget($target);
 
@@ -57,18 +60,19 @@ class Router {
 
         if(isset($args['name'])) {
             $route->setName($args['name']);
-            if (!isset($this->namedRoutes[$route->getName()])) {
-                $this->namedRoutes[$route->getName()] = $route;
+            if (!isset($this->_namedRoutes[$route->getName()])) {
+                $this->_namedRoutes[$route->getName()] = $route;
             }
         }
 
-        $this->routes[] = $route;
+        $this->_routes[] = $route;
     }
 
     /**
     * Matches the current request against mapped routes
     */
-    public function matchCurrentRequest() {
+    public function matchCurrentRequest()
+    {
         $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
         $requestUrl = $_SERVER['REQUEST_URI'];
 
@@ -81,19 +85,24 @@ class Router {
     }
 
     /**
-    * Match given request url and request method and see if a route has been defined for it
+    * Match given request _url and request method and see if a route has been defined for it
     * If so, return route's target
     * If called multiple times
     */
-    public function match($requestUrl, $requestMethod = 'GET') {
+    public function match($requestUrl, $requestMethod = 'GET')
+    {
                         
-        foreach($this->routes as $route) {
+        foreach ($this->_routes as $route) {
             
             // compare server request method with route's allowed http methods
-            if(!in_array($requestMethod, $route->getMethods())) continue;
+            if (! in_array($requestMethod, $route->getMethods())) {
+                continue;
+            }
 
-            // check if request url matches route regex. if not, return false.
-            if (!preg_match("@^".$route->getRegex()."*$@i", $requestUrl, $matches)) continue;
+            // check if request _url matches route regex. if not, return false.
+            if (! preg_match("@^".$route->getRegex()."*$@i", $requestUrl, $matches)) {
+                continue;
+            }
 
             $params = array();
 
@@ -104,8 +113,9 @@ class Router {
 
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {
-                    if (isset($matches[$key + 1]))
+                    if (isset($matches[$key + 1])) {
                         $params[$name] = $matches[$key + 1];
+                    }
                 }
 
             }
@@ -113,9 +123,7 @@ class Router {
             $route->setParameters($params);
 
             return $route;
-            
         }
-
         return false;
     }
 
@@ -128,28 +136,29 @@ class Router {
      * @param array $params Optional array of parameters to use in URL
      * @return string The url to the route
      */
-    public function generate($routeName, array $params = array()) {
+    public function generate($routeName, array $params = array())
+    {
         // Check if route exists
-        if (!isset($this->namedRoutes[$routeName]))
+        if (! isset($this->_namedRoutes[$routeName])) {
             throw new Exception("No route with the name $routeName has been found.");
+        }
 
-        $route = $this->namedRoutes[$routeName];
+        $route = $this->_namedRoutes[$routeName];
         $url = $route->getUrl();
 
         // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
+        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys))
+        {
 
             // grab array with matches
             $param_keys = $param_keys[1];
 
             // loop trough parameter names, store matching value in $params array
-            foreach ($param_keys as $i => $key) {
+            foreach ($param_keys as $key) {
                 if (isset($params[$key]))
                     $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
             }
         }
-
         return $url;
     }
-
 }

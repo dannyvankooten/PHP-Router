@@ -8,31 +8,31 @@ A simple Rails inspired PHP router class.
 * Dynamic URL's: use URL segments as parameters.
 
 ## Usage
+```php
+<?php
+require 'Router.php';
+require 'Route.php';
 
-    <?php
-    require 'Router.php';
-    require 'Route.php';
+$router = new Router();
 
-    $router = new Router();
+$router->setBasePath('/PHP-Router');
 
-    $router->setBasePath('/PHP-Router');
+// defining routes can be as simple as this
+$router->map('/', 'users#index');
 
-    // defining routes can be as simple as this
-    $router->map('/', 'users#index');
+// or somewhat more complicated
+$router->map('/users/:id/edit/', array('controller' => 'SomeController', 'action' => 'someAction'), array('methods' => 'GET,PUT', 'name' => 'users_edit', 'filters' => array('id' => '(\d+)')));
 
-    // or somewhat more complicated
-    $router->map('/users/:id/edit/', array('controller' => 'SomeController', 'action' => 'someAction'), array('methods' => 'GET,PUT', 'name' => 'users_edit', 'filters' => array('id' => '(\d+)')));
+// You can even specify closures as the Route's target
+$router->map('/hello/:name', function($name) { echo "Hello $name."; });
 
-    // You can even specify closures as the Route's target
-    $router->map('/hello/:name', function($name) { echo "Hello $name."; });
+// match current request URL & http method
+$target = $router->matchCurrentRequest();
+var_dump($target);
 
-    // match current request URL & http method
-    $target = $router->matchCurrentRequest();
-    var_dump($target);
-
-    // generate an URL 
-    $router->generate('users_edit', array('id' => 5));
-
+// generate an URL
+$router->generate('users_edit', array('id' => 5));
+```
 
 ## More information
 Have a look at the example.php file or read trough the class' documentation for a better understanding on how to use this class.

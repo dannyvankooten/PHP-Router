@@ -25,7 +25,9 @@ class Router
      */
     private $_basePath = '';
 
-
+    /**
+     * @param RouteCollection $collection
+     */
     public function __construct(RouteCollection $collection)
     {
         $this->_routes = $collection;
@@ -49,7 +51,7 @@ class Router
         $requestUrl = $_SERVER['REQUEST_URI'];
 
         // strip GET variables from URL
-        if(($pos = strpos($requestUrl, '?')) !== false) {
+        if (($pos = strpos($requestUrl, '?')) !== false) {
             $requestUrl =  substr($requestUrl, 0, $pos);
         }
 
@@ -109,6 +111,7 @@ class Router
      * @param $routeName
      * @param array $params Optional array of parameters to use in URL
      * @throws Exception
+     *
      * @internal param string $route_name The name of the route to reverse route.
      * @return string The url to the route
      */

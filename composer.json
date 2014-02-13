@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-0": {
-            "PHProuter": "src/"
+            "PHPRouter": "src/"
         }
     }
 }

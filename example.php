@@ -26,7 +26,7 @@ $route = $router->matchCurrentRequest();
 var_dump($route);
 
 ?><h3>Current URL & HTTP method would route to: </h3>
-<?php if($route) { ?>
+<?php if ($route) { ?>
 	<strong>Target:</strong>
 	<pre><?php var_dump($route->getTarget()); ?></pre>
 

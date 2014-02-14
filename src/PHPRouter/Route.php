@@ -3,113 +3,125 @@ namespace PHPRouter;
 
 class Route
 {
-	/**
-	* URL of this Route
-	* @var string
-	*/
-	private $_url;
+    /**
+    * URL of this Route
+    * @var string
+    */
+    private $_url;
 
-	/**
-	* Accepted HTTP methods for this route
-	* @var array
-	*/
-	private $_methods = array('GET','POST','PUT','DELETE');
+    /**
+    * Accepted HTTP methods for this route
+    * @var array
+    */
+    private $_methods = array('GET', 'POST', 'PUT', 'DELETE');
 
-	/**
-	* Target for this route, can be anything.
-	* @var mixed
-	*/
-	private $_target;
+    /**
+    * Target for this route, can be anything.
+    * @var mixed
+    */
+    private $_target;
 
-	/**
-	* The name of this route, used for reversed routing
-	* @var string
-	*/
-	private $_name;
+    /**
+    * The name of this route, used for reversed routing
+    * @var string
+    */
+    private $_name;
 
-	/**
-	* Custom parameter filters for this route
-	* @var array
-	*/
-	private $_filters = array();
+    /**
+    * Custom parameter filters for this route
+    * @var array
+    */
+    private $_filters = array();
 
-	/**
-	* Array containing parameters passed through request URL
-	* @var array
-	*/
-	private $_parameters = array();
+    /**
+    * Array containing parameters passed through request URL
+    * @var array
+    */
+    private $_parameters = array();
 
-	public function getUrl()
+    /**
+     * @param $resource
+     * @param array $config
+     */
+    public function __construct($resource, array $config)
     {
-		return $this->_url;
-	}
+        $this->_url = $resource;
+        $this->_config = $config;
+        $this->_methods = isset($config['methods']) ? $config['methods'] : array();
+        $this->_target = isset($config['target']) ? $config['target'] : null;
+    }
 
-	public function setUrl($url)
+    public function getUrl()
     {
-		$url = (string) $url;
+        return $this->_url;
+    }
 
-		// make sure that the URL is suffixed with a forward slash
-		if(substr($url,-1) !== '/') $url .= '/';
-		
-		$this->_url = $url;
-	}
-
-	public function getTarget()
+    public function setUrl($url)
     {
-		return $this->_target;
-	}
+        $url = (string) $url;
 
-	public function setTarget($target)
-    {
-		$this->_target = $target;
-	}
+        // make sure that the URL is suffixed with a forward slash
+        if(substr($url,-1) !== '/') $url .= '/';
 
-	public function getMethods()
-    {
-		return $this->_methods;
-	}
+        $this->_url = $url;
+    }
 
-	public function setMethods(array $methods)
+    public function getTarget()
     {
-		$this->_methods = $methods;
-	}
+        return $this->_target;
+    }
 
-	public function getName()
+    public function setTarget($target)
     {
-		return $this->_name;
-	}
+        $this->_target = $target;
+    }
 
-	public function setName($name)
+    public function getMethods()
     {
-		$this->_name = (string) $name;
-	}
+        return $this->_methods;
+    }
 
-	public function setFilters(array $filters)
+    public function setMethods(array $methods)
     {
-		$this->_filters = $filters;
-	}
+        $this->_methods = $methods;
+    }
 
-	public function getRegex()
+    public function getName()
     {
-		return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->_url);
-	}
+        return $this->_name;
+    }
 
-	private function substituteFilter($matches)
+    public function setName($name)
     {
-		if (isset($matches[1]) && isset($this->_filters[$matches[1]])) {
-       		return $this->_filters[$matches[1]];
-       	}
-        
-       	return "([\w-]+)";
-	}
+        $this->_name = (string) $name;
+    }
 
-	public function getParameters()
+    public function setFilters(array $filters)
     {
-		return $this->_parameters;
-	}
+        $this->_filters = $filters;
+    }
 
-	public function setParameters(array $parameters)
+    public function getRegex()
     {
-		$this->_parameters = $parameters;
-	}
+       return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->_url);
+    }
+
+    private function substituteFilter($matches)
+    {
+        if (isset($matches[1]) && isset($this->_filters[$matches[1]])) {
+            return $this->_filters[$matches[1]];
+        }
+
+        return "([\w-]+)";
+    }
+
+    public function getParameters()
+    {
+        return $this->_parameters;
+    }
+
+    public function setParameters(array $parameters)
+    {
+        $this->_parameters = $parameters;
+    }
 }

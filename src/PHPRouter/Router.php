@@ -1,6 +1,7 @@
 <?php
 namespace PHPRouter;
 
+use Exception;
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
  */
@@ -23,49 +24,22 @@ class Router
      * @var string
      */
     private $_basePath = '';
-    
+
+    /**
+     * @param RouteCollection $collection
+     */
+    public function __construct(RouteCollection $collection)
+    {
+        $this->_routes = $collection;
+    }
+
     /**
      * Set the base _url - gets prepended to all route _url's.
-     * @param string $base_url 
+     * @param $basePath
      */
     public function setBasePath($basePath)
     {
         $this->_basePath = (string) $basePath;
-    }
-
-    /**
-    * Route factory method
-    *
-    * Maps the given URL to the given target.
-    * @param string $routeUrl string
-    * @param mixed $target The target of this route. Can be anything. You'll have to provide your own method to turn *      this into a filename, controller / action pair, etc..
-    * @param array $args Array of optional arguments.
-    */
-    public function map($routeUrl, $target = '', array $args = array())
-    {
-        $route = new Route();
-
-        $route->setUrl($this->_basePath . $routeUrl);
-
-        $route->setTarget($target);
-
-        if(isset($args['methods'])) {
-            $methods = explode(',', $args['methods']);
-            $route->setMethods($methods);
-        }
-
-        if(isset($args['filters'])) {
-            $route->setFilters($args['filters']);
-        }
-
-        if(isset($args['name'])) {
-            $route->setName($args['name']);
-            if (!isset($this->_namedRoutes[$route->getName()])) {
-                $this->_namedRoutes[$route->getName()] = $route;
-            }
-        }
-
-        $this->_routes[] = $route;
     }
 
     /**
@@ -77,7 +51,7 @@ class Router
         $requestUrl = $_SERVER['REQUEST_URI'];
 
         // strip GET variables from URL
-        if(($pos = strpos($requestUrl, '?')) !== false) {
+        if (($pos = strpos($requestUrl, '?')) !== false) {
             $requestUrl =  substr($requestUrl, 0, $pos);
         }
 
@@ -85,28 +59,31 @@ class Router
     }
 
     /**
-    * Match given request _url and request method and see if a route has been defined for it
-    * If so, return route's target
-    * If called multiple times
-    */
+     * Match given request _url and request method and see if a route has been defined for it
+     * If so, return route's target
+     * If called multiple times
+     *
+     * @param string $requestUrl
+     * @param string $requestMethod
+     * @return bool
+     */
     public function match($requestUrl, $requestMethod = 'GET')
     {
-                        
-        foreach ($this->_routes as $route) {
-            
+        foreach ($this->_routes->all() as $routes) {
+
             // compare server request method with route's allowed http methods
-            if (! in_array($requestMethod, $route->getMethods())) {
+            if (! in_array($requestMethod, (array) $routes->getMethods())) {
                 continue;
             }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^".$route->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^".$this->_basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
             $params = array();
 
-            if (preg_match_all("/:([\w-]+)/", $route->getUrl(), $argument_keys)) {
+            if (preg_match_all("/:([\w-]+)/", $routes->getUrl(), $argument_keys)) {
 
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
@@ -120,20 +97,22 @@ class Router
 
             }
 
-            $route->setParameters($params);
+            $routes->setParameters($params);
 
-            return $route;
+            return $routes;
         }
         return false;
     }
 
 
-    
     /**
      * Reverse route a named route
-     * 
-     * @param string $route_name The name of the route to reverse route.
+     *
+     * @param $routeName
      * @param array $params Optional array of parameters to use in URL
+     * @throws Exception
+     *
+     * @internal param string $route_name The name of the route to reverse route.
      * @return string The url to the route
      */
     public function generate($routeName, array $params = array())

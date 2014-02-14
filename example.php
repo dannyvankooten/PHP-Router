@@ -1,25 +1,32 @@
 <?php
-require 'Router.php';
-require 'Route.php';
+//require __DIR__.'/vendor/autoload.php';
+require 'src\PHPRouter\RouteCollection.php';
+require 'src\PHPRouter\Router.php';
+require 'src\PHPRouter\Route.php';
 
-$router = new Router();
+use PHPRouter\RouteCollection;
+use PHPRouter\Router;
+use PHPRouter\Route;
 
+$collection = new RouteCollection();
+$collection->add('users', new Route('/users/', array(
+    '_controller' => 'someController::users_create',
+    'methods' => 'GET'
+)));
+
+$collection->add('index', new Route('/', array(
+    '_controller' => 'someController::indexAction',
+    'methods' => 'GET'
+)));
+
+$router = new Router($collection);
 $router->setBasePath('/PHP-Router');
-
-$router->map('/', 'someController:indexAction', array('methods' => 'GET'));
-$router->map('/users/','users#create', array('methods' => 'POST', 'name' => 'users_create'));
-$router->map('/users/:id/edit/', 'users#edit', array('methods' => 'GET', 'name' => 'users_edit', 'filters' => array('id' => '(\d+)')));
-$router->map('/contact/',array('controller' => 'someController', 'action' => 'contactAction'), array('name' => 'contact'));
-
-$router->map('/blog/:slug', array('c' => 'BlogController', 'a' => 'showAction'));
-
-// capture rest of URL in "path" parameter (including forward slashes)
-$router->map('/site-section/:path','some#target',array( 'filters' => array( 'path' => '(.*)') ) );
-
 $route = $router->matchCurrentRequest();
 
+var_dump($route);
+
 ?><h3>Current URL & HTTP method would route to: </h3>
-<?php if($route) { ?>
+<?php if ($route) { ?>
 	<strong>Target:</strong>
 	<pre><?php var_dump($route->getTarget()); ?></pre>
 

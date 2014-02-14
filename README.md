@@ -7,31 +7,41 @@ A simple Rails inspired PHP router class.
 * Reversed routing using named routes
 * Dynamic URL's: use URL segments as parameters.
 
+# Easy to install with **composer**
+
+```javascript
+{
+    "require": {
+        "dannyvankooten/php-router": "dev-master"
+    }
+}
+```
+
 ## Usage
 ```php
 <?php
-require 'Router.php';
-require 'Route.php';
+require __DIR__.'/vendor/autoload.php';
 
-$router = new Router();
+use PHPRouter\RouteCollection;
+use PHPRouter\Router;
+use PHPRouter\Route;
 
+$collection = new RouteCollection();
+$collection->add('users', new Route('/users/', array(
+    '_controller' => 'someController::users_create',
+    'methods' => 'GET'
+)));
+
+$collection->add('index', new Route('/', array(
+    '_controller' => 'someController::indexAction',
+    'methods' => 'GET'
+)));
+
+$router = new Router($collection);
 $router->setBasePath('/PHP-Router');
+$route = $router->matchCurrentRequest();
 
-// defining routes can be as simple as this
-$router->map('/', 'users#index');
-
-// or somewhat more complicated
-$router->map('/users/:id/edit/', array('controller' => 'SomeController', 'action' => 'someAction'), array('methods' => 'GET,PUT', 'name' => 'users_edit', 'filters' => array('id' => '(\d+)')));
-
-// You can even specify closures as the Route's target
-$router->map('/hello/:name', function($name) { echo "Hello $name."; });
-
-// match current request URL & http method
-$target = $router->matchCurrentRequest();
-var_dump($target);
-
-// generate an URL
-$router->generate('users_edit', array('id' => 5));
+var_dump($route);
 ```
 
 ## More information

@@ -2,6 +2,8 @@
 namespace PHPRouter;
 
 use Exception;
+use PHPRouter\RouteCollection;
+
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
  */
@@ -139,5 +141,25 @@ class Router
             }
         }
         return $url;
+    }
+
+
+    /**
+     * Create routes by array, and return a Router object
+     *
+     * @param array $config provide by Config::loadFromFile()
+     * @return Router
+     */
+    public static function parseConfig(array $config)
+    {
+        $collection = new RouteCollection();
+        foreach ($config['routes'] as $name => $route) {
+            $collection->add($name, new Route($route[0], array(
+                '_controller' => str_replace('.', '::', $route[1]),
+                'methods' => $route[2]
+            )));
+        }
+
+        return new Router($collection);
     }
 }

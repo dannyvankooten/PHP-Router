@@ -7,7 +7,6 @@ class Config
 {
     public static function loadFromFile($yamlFile)
     {
-        echo $yamlFile;
         try {
             $value = Yaml::parse(file_get_contents($yamlFile));
         } catch (\Exception $e) {

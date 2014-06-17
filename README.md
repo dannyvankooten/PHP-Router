@@ -27,12 +27,12 @@ use PHPRouter\Router;
 use PHPRouter\Route;
 
 $collection = new RouteCollection();
-$collection->add('users', new Route('/users/', array(
+$collection->attach(new Route('/users/', array(
     '_controller' => 'someController::users_create',
     'methods' => 'GET'
 )));
 
-$collection->add('index', new Route('/', array(
+$collection->attach(new Route('/', array(
     '_controller' => 'someController::indexAction',
     'methods' => 'GET'
 )));

@@ -8,14 +8,14 @@ class RouteCollection extends \SplObjectStorage
      * and return it.
      *
      * @return array
-     */ 
+     */
     public function all()
     {
-	$_tmp = array();
+        $_tmp = array();
         foreach($this as $objectValue)
-	{
-	    $_tmp[] = $objectValue;
-	}
-	return $_tmp;
+        {
+            $_tmp[] = $objectValue;
+        }
+        return $_tmp;
     }
 }

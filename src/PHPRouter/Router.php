@@ -12,12 +12,12 @@ class Router
     /**
     * Array that holds all Route objects
     * @var array
-    */ 
+    */
     private $_routes = array();
 
     /**
      * Array to store named routes in, used for reverse routing.
-     * @var array 
+     * @var array
      */
     private $_namedRoutes = array();
 
@@ -154,7 +154,7 @@ class Router
     {
         $collection = new RouteCollection();
         foreach ($config['routes'] as $name => $route) {
-            $collection->add($name, new Route($route[0], array(
+            $collection->attach($name, new Route($route[0], array(
                 '_controller' => str_replace('.', '::', $route[1]),
                 'methods' => $route[2]
             )));

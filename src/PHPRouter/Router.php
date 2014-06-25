@@ -154,7 +154,7 @@ class Router
     {
         $collection = new RouteCollection();
         foreach ($config['routes'] as $name => $route) {
-            $collection->attach($name, new Route($route[0], array(
+            $collection->attach(new Route($route[0], array(
                 '_controller' => str_replace('.', '::', $route[1]),
                 'methods' => $route[2]
             )));

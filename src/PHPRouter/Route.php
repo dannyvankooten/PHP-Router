@@ -124,4 +124,11 @@ class Route
     {
         $this->_parameters = $parameters;
     }
+
+    public function dispatch()
+    {
+        $action = explode('::', $this->_config['_controller']);
+        $instance = new $action[0];
+        $instance->$action[1]();
+    }
 }

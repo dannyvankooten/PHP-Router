@@ -112,7 +112,7 @@ class Route
             return $this->_filters[$matches[1]];
         }
 
-        return "([\w-]+)";
+        return "([\w-%]+)";
     }
 
     public function getParameters()

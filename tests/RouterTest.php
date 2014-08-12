@@ -13,7 +13,7 @@ class someController
 
 class RouterTest extends PHPUnit_Framework_TestCase
 {
-    public function testMatch()
+    private function getRouter()
     {
         $collection = new RouteCollection();
         $collection->attach(new Route('/users/', array(
@@ -28,22 +28,41 @@ class RouterTest extends PHPUnit_Framework_TestCase
             '_controller' => 'someController::indexAction',
             'methods' => 'GET'
         )));
+        return new Router($collection);
+    }
 
-        $router = new Router($collection);
-        $this->assertFalse(false, $router->match('/aaa'));
-        $this->assertNotEquals(false, $router->match('/users'));
-        $this->assertNotEquals(false, $router->match('/user/1'));
-        $this->assertNotEquals(false, $router->match('/user/%E3%81%82'));
+    public function matcherProvider()
+    {
+        $router = $this->getRouter();
+        return array(
+            array($router, '', '', true),
+            array($router, '', '/', true),
+            array($router, '', '/aaa', false),
+            array($router, '', '/users', true),
+            array($router, '', '/user/1', true),
+            array($router, '', '/user/%E3%81%82', true),
 
-        $router->setBasePath('/api');
-        $this->assertFalse($router->match('/aaa'));
-        $this->assertFalse($router->match('/users'));
-        $this->assertFalse($router->match('/user/1'));
-        $this->assertFalse(false, $router->match('/user/%E3%81%82'));
+            array($router, '/api', '', false),
+            array($router, '/api', '/', false),
+            array($router, '/api', '/aaa', false),
+            array($router, '/api', '/users', false),
+            array($router, '/api', '/user/1', false),
+            array($router, '/api', '/user/%E3%81%82', false),
 
-        $this->assertFalse($router->match('/api/aaa'));
-        $this->assertNotEquals(false, $router->match('/api/users'));
-        $this->assertNotEquals(false, $router->match('/api/user/1'));
-        $this->assertNotEquals(false, $router->match('/api/user/%E3%81%82'));
+            array($router, '/api', '/api', true),
+            array($router, '/api', '/api/aaa', false),
+            array($router, '/api', '/api/users', true),
+            array($router, '/api', '/api/user/1', true),
+            array($router, '/api', '/api/user/%E3%81%82', true),
+        );
+    }
+
+    /**
+     * @dataProvider matcherProvider
+     */
+    public function testMatch($router, $base, $path, $expected)
+    {
+        $router->setBasePath($base);
+        $this->assertEquals($expected, !!$router->match($path));
     }
 }

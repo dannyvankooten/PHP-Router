@@ -41,7 +41,7 @@ class Router
      */
     public function setBasePath($basePath)
     {
-        $this->_basePath = (string) $basePath;
+        static::$_basePath = (string) $basePath;
     }
 
     /**

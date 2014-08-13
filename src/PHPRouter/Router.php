@@ -25,7 +25,7 @@ class Router
      * The base REQUEST_URI. Gets prepended to all route _url's.
      * @var string
      */
-    private static $_basePath = '';
+    private $_basePath = '';
 
     /**
      * @param RouteCollection $collection
@@ -79,7 +79,7 @@ class Router
             }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^".static::$_basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^".$this->_basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
@@ -153,10 +153,6 @@ class Router
      */
     public static function parseConfig(array $config)
     {
-        if (isset($config['base_path'])) {
-            static::$_basePath = $config['base_path'];
-        }
-
         $collection = new RouteCollection();
         foreach ($config['routes'] as $name => $route) {
             $collection->attach(new Route($route[0], array(
@@ -165,6 +161,10 @@ class Router
             )));
         }
 
-        return new Router($collection);
+        $router = new Router($collection);
+        if (isset($config['base_path'])) {
+            $router->setBasePath($config['base_path']);
+        }
+        return $router;
     }
 }

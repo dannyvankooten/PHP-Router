@@ -1,15 +1,10 @@
 <?php
 
+require_once "SomeController.php";
+
 use PHPRouter\RouteCollection;
 use PHPRouter\Router;
 use PHPRouter\Route;
-
-class someController
-{
-    public function users_create() {}
-    public function indexAction() {}
-    public function user() {}
-}
 
 class RouterTest extends PHPUnit_Framework_TestCase
 {
@@ -17,15 +12,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $collection = new RouteCollection();
         $collection->attach(new Route('/users/', array(
-            '_controller' => 'someController::users_create',
+            '_controller' => 'SomeController::users_create',
             'methods' => 'GET'
         )));
         $collection->attach(new Route('/user/:id', array(
-            '_controller' => 'someController::user',
+            '_controller' => 'SomeController::user',
             'methods' => 'GET'
         )));
         $collection->attach(new Route('/', array(
-            '_controller' => 'someController::indexAction',
+            '_controller' => 'SomeController::indexAction',
             'methods' => 'GET'
         )));
         return new Router($collection);

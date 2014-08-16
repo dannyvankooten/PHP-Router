@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPRouter\Test;
+
 class SomeController
 {
     public function users_create() {}

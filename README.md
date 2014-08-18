@@ -18,6 +18,19 @@ A simple Rails inspired PHP router class.
 ```
 
 ## Usage
+
+### Friendly URL
+
+Create a simple .htaccess file on your root directory.
+
+```apache
+Options +FollowSymLinks
+RewriteEngine On
+RewriteRule ^(.*)$ index.php [NC,L]
+```
+
+It's a simple example of routers in action
+
 ```php
 <?php
 require __DIR__.'/vendor/autoload.php';

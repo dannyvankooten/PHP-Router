@@ -129,6 +129,6 @@ class Route
     {
         $action = explode('::', $this->_config['_controller']);
         $instance = new $action[0];
-        $instance->$action[1]();
+        call_user_func_array(array($instance, $action[1]), $this->_parameters);
     }
 }

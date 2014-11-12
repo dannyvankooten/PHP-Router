@@ -1,6 +1,10 @@
 <?php
 namespace PHPRouter;
 
+use PHPRouter\DI\ContainerInterface;
+use PHPRouter\DI\InjectableInterface;
+use PHPRouter\DI\Exceptions\InjectionException;
+
 class Route
 {
     /**
@@ -40,13 +44,21 @@ class Route
     private $_parameters = array();
 
     /**
+     * Service container
+     * @var object
+     */
+    private $_container;
+
+    /**
      * @param $resource
      * @param array $config
      */
-    public function __construct($resource, array $config)
+    public function __construct($resource, array $config, ContainerInterface $container = null)
     {
         $this->_url = $resource;
         $this->_config = $config;
+        $this->_container= $container;
+
         $this->_methods = isset($config['methods']) ? $config['methods'] : array();
         $this->_target = isset($config['target']) ? $config['target'] : null;
     }
@@ -120,6 +132,16 @@ class Route
         return $this->_parameters;
     }
 
+    /**
+     * @return object
+     */
+    public function getContainer()
+    {
+        return $this->_container;
+    }
+
+
+
     public function setParameters(array $parameters)
     {
         $this->_parameters = $parameters;
@@ -129,6 +151,15 @@ class Route
     {
         $action = explode('::', $this->_config['_controller']);
         $instance = new $action[0];
+
+        if($this->getContainer() && $instance instanceof InjectableInterface){
+            $instance->setServiceContainer($this->getContainer());
+        }else{
+            throw new InjectionException('To inject container you need to implement InjectableInterface');
+        }
+
         call_user_func_array(array($instance, $action[1]), $this->_parameters);
     }
+
+
 }

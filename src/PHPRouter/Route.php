@@ -30,7 +30,7 @@ class Route
      *
      * @var string[]
      */
-    private $methods = ['GET', 'POST', 'PUT', 'DELETE'];
+    private $methods = array('GET', 'POST', 'PUT', 'DELETE');
 
     /**
      * Target for this route, can be anything.
@@ -48,13 +48,13 @@ class Route
      * Custom parameter filters for this route
      * @var array
      */
-    private $filters = [];
+    private $filters = array();
 
     /**
      * Array containing parameters passed through request URL
      * @var array
      */
-    private $parameters = [];
+    private $parameters = array();
 
     /**
      * @var array
@@ -69,7 +69,7 @@ class Route
     {
         $this->url     = $resource;
         $this->config  = $config;
-        $this->methods = $config['methods'] ?: [];
+        $this->methods = $config['methods'] ?: array();
         $this->target  = $config['target']  ?: null;
     }
 
@@ -127,7 +127,7 @@ class Route
 
     public function getRegex()
     {
-        return preg_replace_callback("/:(\w+)/", [&$this, 'substituteFilter'], $this->url);
+        return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->url);
     }
 
     private function substituteFilter($matches)

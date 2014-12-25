@@ -68,7 +68,7 @@ class Route
     public function __construct($resource, array $config)
     {
         $this->url     = $resource;
-        $this->config = $config;
+        $this->config  = $config;
         $this->methods = $config['methods'] ?: [];
         $this->target  = $config['target']  ?: null;
     }

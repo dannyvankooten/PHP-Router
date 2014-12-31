@@ -20,51 +20,57 @@ namespace PHPRouter;
 class Route
 {
     /**
-    * URL of this Route
-    * @var string
-    */
+     * URL of this Route
+     * @var string
+     */
     private $url;
 
     /**
-    * Accepted HTTP methods for this route
-    * @var array
-    */
-    private $methods = array('GET', 'POST', 'PUT', 'DELETE');
+     * Accepted HTTP methods for this route.
+     *
+     * @var string[]
+     */
+    private $methods = ['GET', 'POST', 'PUT', 'DELETE'];
 
     /**
-    * Target for this route, can be anything.
-    * @var mixed
-    */
+     * Target for this route, can be anything.
+     * @var mixed
+     */
     private $target;
 
     /**
-    * The name of this route, used for reversed routing
-    * @var string
-    */
+     * The name of this route, used for reversed routing
+     * @var string
+     */
     private $name;
 
     /**
-    * Custom parameter filters for this route
-    * @var array
-    */
-    private $filters = array();
+     * Custom parameter filters for this route
+     * @var array
+     */
+    private $filters = [];
 
     /**
-    * Array containing parameters passed through request URL
-    * @var array
-    */
-    private $parameters = array();
+     * Array containing parameters passed through request URL
+     * @var array
+     */
+    private $parameters = [];
 
     /**
-     * @param $resource
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @param       $resource
      * @param array $config
      */
     public function __construct($resource, array $config)
     {
-        $this->url = $resource;
-        $this->_config = $config;
-        $this->methods = isset($config['methods']) ? $config['methods'] : array();
-        $this->target = isset($config['target']) ? $config['target'] : null;
+        $this->url     = $resource;
+        $this->config = $config;
+        $this->methods = $config['methods'] ?: [];
+        $this->target  = $config['target']  ?: null;
     }
 
     public function getUrl()
@@ -74,7 +80,7 @@ class Route
 
     public function setUrl($url)
     {
-        $url = (string) $url;
+        $url = (string)$url;
 
         // make sure that the URL is suffixed with a forward slash
         if (substr($url, -1) !== '/') {
@@ -111,7 +117,7 @@ class Route
 
     public function setName($name)
     {
-        $this->name = (string) $name;
+        $this->name = (string)$name;
     }
 
     public function setFilters(array $filters)
@@ -121,7 +127,7 @@ class Route
 
     public function getRegex()
     {
-        return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->url);
+        return preg_replace_callback("/:(\w+)/", [&$this, 'substituteFilter'], $this->url);
     }
 
     private function substituteFilter($matches)
@@ -145,7 +151,7 @@ class Route
 
     public function dispatch()
     {
-        $action = explode('::', $this->_config['_controller']);
+        $action = explode('::', $this->config['_controller']);
         $instance = new $action[0];
         $instance->$action[1]();
     }

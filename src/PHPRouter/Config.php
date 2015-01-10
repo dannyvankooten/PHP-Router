@@ -19,8 +19,26 @@ namespace PHPRouter;
 
 use Symfony\Component\Yaml\Yaml;
 
-class Config
+/**
+ * Auxiliary Config class, to parse a Yaml file.
+ *
+ * @author Jefersson Nathan <malukenho@phpse.net>
+ * @package PHPRouter
+ */
+final class Config
 {
+    /**
+     * Avoid instantiation.
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * @param string $yamlFile file location.
+     *
+     * @return mixed[]
+     */
     public static function loadFromFile($yamlFile)
     {
         try {

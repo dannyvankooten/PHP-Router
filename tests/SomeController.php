@@ -17,7 +17,7 @@
  */
 namespace PHPRouter\Test;
 
-class SomeController
+final class SomeController
 {
     public function users_create() {}
     public function indexAction() {}

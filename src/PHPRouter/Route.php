@@ -49,6 +49,7 @@ class Route
         $this->_config = $config;
         $this->_methods = isset($config['methods']) ? $config['methods'] : array();
         $this->_target = isset($config['target']) ? $config['target'] : null;
+		$this->_name = isset($config['name']) ? $config['name'] : null;
     }
 
     public function getUrl()

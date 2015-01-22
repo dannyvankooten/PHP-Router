@@ -24,8 +24,8 @@
         "phpunit/phpunit": "4.*"
     },
     "autoload": {
-        "psr-0": {
-            "PHPRouter": "src/"
+        "psr-4": {
+            "PHPRouter\\": "src/PHPRouter/"
         }
     }
 }

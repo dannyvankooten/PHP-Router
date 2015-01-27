@@ -1,0 +1,7 @@
+<phpunit bootstrap="./vendor/autoload.php" colors="true" syntaxCheck="true">
+  <testsuites>
+    <testsuite name="PHP Router">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

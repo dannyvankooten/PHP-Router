@@ -1,4 +1,20 @@
 <?php
+/**
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ */
 namespace PHPRouter;
 
 class Route
@@ -7,37 +23,37 @@ class Route
     * URL of this Route
     * @var string
     */
-    private $_url;
+    private $url;
 
     /**
     * Accepted HTTP methods for this route
     * @var array
     */
-    private $_methods = array('GET', 'POST', 'PUT', 'DELETE');
+    private $methods = array('GET', 'POST', 'PUT', 'DELETE');
 
     /**
     * Target for this route, can be anything.
     * @var mixed
     */
-    private $_target;
+    private $target;
 
     /**
     * The name of this route, used for reversed routing
     * @var string
     */
-    private $_name;
+    private $name;
 
     /**
     * Custom parameter filters for this route
     * @var array
     */
-    private $_filters = array();
+    private $filters = array();
 
     /**
     * Array containing parameters passed through request URL
     * @var array
     */
-    private $_parameters = array();
+    private $parameters = array();
 
     /**
      * @param $resource
@@ -45,15 +61,15 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->_url = $resource;
+        $this->url = $resource;
         $this->_config = $config;
-        $this->_methods = isset($config['methods']) ? $config['methods'] : array();
-        $this->_target = isset($config['target']) ? $config['target'] : null;
+        $this->methods = isset($config['methods']) ? $config['methods'] : array();
+        $this->target = isset($config['target']) ? $config['target'] : null;
     }
 
     public function getUrl()
     {
-        return $this->_url;
+        return $this->url;
     }
 
     public function setUrl($url)
@@ -61,55 +77,57 @@ class Route
         $url = (string) $url;
 
         // make sure that the URL is suffixed with a forward slash
-        if(substr($url,-1) !== '/') $url .= '/';
+        if (substr($url, -1) !== '/') {
+            $url .= '/';
+        }
 
-        $this->_url = $url;
+        $this->url = $url;
     }
 
     public function getTarget()
     {
-        return $this->_target;
+        return $this->target;
     }
 
     public function setTarget($target)
     {
-        $this->_target = $target;
+        $this->target = $target;
     }
 
     public function getMethods()
     {
-        return $this->_methods;
+        return $this->methods;
     }
 
     public function setMethods(array $methods)
     {
-        $this->_methods = $methods;
+        $this->methods = $methods;
     }
 
     public function getName()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     public function setName($name)
     {
-        $this->_name = (string) $name;
+        $this->name = (string) $name;
     }
 
     public function setFilters(array $filters)
     {
-        $this->_filters = $filters;
+        $this->filters = $filters;
     }
 
     public function getRegex()
     {
-       return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->_url);
+        return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->url);
     }
 
     private function substituteFilter($matches)
     {
-        if (isset($matches[1]) && isset($this->_filters[$matches[1]])) {
-            return $this->_filters[$matches[1]];
+        if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
+            return $this->filters[$matches[1]];
         }
 
         return "([\w-%]+)";
@@ -117,12 +135,12 @@ class Route
 
     public function getParameters()
     {
-        return $this->_parameters;
+        return $this->parameters;
     }
 
     public function setParameters(array $parameters)
     {
-        $this->_parameters = $parameters;
+        $this->parameters = $parameters;
     }
 
     public function dispatch()

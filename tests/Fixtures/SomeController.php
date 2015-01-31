@@ -15,38 +15,11 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouter;
+namespace PHPRouter\Test;
 
-use InvalidArgumentException;
-use Symfony\Component\Yaml\Yaml;
-
-/**
- * Auxiliary Config class, to parse a Yaml file.
- *
- * @author Jefersson Nathan <malukenho@phpse.net>
- * @package PHPRouter
- */
-final class Config
+final class SomeController
 {
-    /**
-     * Avoid instantiation.
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * @param string $yamlFile file location.
-     * @throws InvalidArgumentException
-     *
-     * @return mixed[]
-     */
-    public static function loadFromFile($yamlFile)
-    {
-        if (! is_file($yamlFile)) {
-            throw new InvalidArgumentException(sprintf('The file %s not exists!', $yamlFile));
-        }
-
-        return Yaml::parse(file_get_contents($yamlFile));
-    }
+    public function users_create() {}
+    public function indexAction() {}
+    public function user() {}
 }

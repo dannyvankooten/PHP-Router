@@ -1,4 +1,20 @@
 <?php
+/**
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ */
 namespace PHPRouter;
 
 use Exception;
@@ -13,26 +29,26 @@ class Router
     * Array that holds all Route objects
     * @var array
     */
-    private $_routes = array();
+    private $routes = array();
 
     /**
      * Array to store named routes in, used for reverse routing.
      * @var array
      */
-    private $_namedRoutes = array();
+    private $namedRoutes = array();
 
     /**
-     * The base REQUEST_URI. Gets prepended to all route _url's.
+     * The base REQUEST_URI. Gets prepended to all route url's.
      * @var string
      */
-    private $_basePath = '';
+    private $basePath = '';
 
     /**
      * @param RouteCollection $collection
      */
     public function __construct(RouteCollection $collection)
     {
-        $this->_routes = $collection;
+        $this->routes = $collection;
     }
 
     /**
@@ -41,7 +57,7 @@ class Router
      */
     public function setBasePath($basePath)
     {
-        $this->_basePath = (string) $basePath;
+        $this->basePath = (string) $basePath;
     }
 
     /**
@@ -49,7 +65,12 @@ class Router
     */
     public function matchCurrentRequest()
     {
-        $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+        $requestMethod = (
+            isset($_POST['_method'])
+            && ($_method = strtoupper($_POST['_method']))
+            && in_array($_method, array('PUT', 'DELETE'))
+        ) ? $_method : $_SERVER['REQUEST_METHOD'];
+
         $requestUrl = $_SERVER['REQUEST_URI'];
 
         // strip GET variables from URL
@@ -71,7 +92,7 @@ class Router
      */
     public function match($requestUrl, $requestMethod = 'GET')
     {
-        foreach ($this->_routes->all() as $routes) {
+        foreach ($this->routes->all() as $routes) {
 
             // compare server request method with route's allowed http methods
             if (! in_array($requestMethod, (array) $routes->getMethods())) {
@@ -79,7 +100,7 @@ class Router
             }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^".$this->_basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^".$this->basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
@@ -104,6 +125,7 @@ class Router
 
             return $routes;
         }
+
         return false;
     }
 
@@ -121,26 +143,26 @@ class Router
     public function generate($routeName, array $params = array())
     {
         // Check if route exists
-        if (! isset($this->_namedRoutes[$routeName])) {
+        if (! isset($this->namedRoutes[$routeName])) {
             throw new Exception("No route with the name $routeName has been found.");
         }
 
-        $route = $this->_namedRoutes[$routeName];
+        $route = $this->namedRoutes[$routeName];
         $url = $route->getUrl();
 
         // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys))
-        {
-
+        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
             // grab array with matches
             $param_keys = $param_keys[1];
 
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $key) {
-                if (isset($params[$key]))
+                if (isset($params[$key])) {
                     $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+                }
             }
         }
+
         return $url;
     }
 
@@ -165,6 +187,7 @@ class Router
         if (isset($config['base_path'])) {
             $router->setBasePath($config['base_path']);
         }
+
         return $router;
     }
 }

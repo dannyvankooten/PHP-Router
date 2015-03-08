@@ -25,13 +25,13 @@ namespace PHPRouter;
 class RouteCollection extends \SplObjectStorage
 {
     /**
-     * {@inheritDoc}
+     * Attach a Route to the collection.
      *
      * @param Route $attachObject
      */
-    public function attach(Route $attachObject)
+    public function attachRoute(Route $attachObject)
     {
-        parent::attach($attachObject);
+        parent::attach($attachObject, null);
     }
 
     /**

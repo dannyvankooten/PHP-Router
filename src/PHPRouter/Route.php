@@ -69,8 +69,8 @@ class Route
     {
         $this->url     = $resource;
         $this->config  = $config;
-        $this->methods = $config['methods'] ?: array();
-        $this->target  = $config['target']  ?: null;
+        $this->methods = isset($config['methods']) ? $config['methods'] : array();
+        $this->target  = isset($config['target'])  ? $config['target']  : null;
     }
 
     public function getUrl()
@@ -153,6 +153,6 @@ class Route
     {
         $action = explode('::', $this->config['_controller']);
         $instance = new $action[0];
-        call_user_func_array(array($instance, $action[1]), $this->_parameters);
+        call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
 }

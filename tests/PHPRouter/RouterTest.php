@@ -37,15 +37,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
     private function getRouter()
     {
         $collection = new RouteCollection();
-        $collection->attach(new Route('/users/', array(
+        $collection->attachRoute(new Route('/users/', array(
             '_controller' => 'PHPRouter\Test\SomeController::users_create',
             'methods' => 'GET'
         )));
-        $collection->attach(new Route('/user/:id', array(
+        $collection->attachRoute(new Route('/user/:id', array(
             '_controller' => 'PHPRouter\Test\SomeController::user',
             'methods' => 'GET'
         )));
-        $collection->attach(new Route('/', array(
+        $collection->attachRoute(new Route('/', array(
             '_controller' => 'PHPRouter\Test\SomeController::indexAction',
             'methods' => 'GET'
         )));

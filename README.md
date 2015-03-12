@@ -40,12 +40,12 @@ use PHPRouter\Router;
 use PHPRouter\Route;
 
 $collection = new RouteCollection();
-$collection->attach(new Route('/users/', array(
+$collection->attachRoute(new Route('/users/', array(
     '_controller' => 'someController::users_create',
     'methods' => 'GET'
 )));
 
-$collection->attach(new Route('/', array(
+$collection->attachRoute(new Route('/', array(
     '_controller' => 'someController::indexAction',
     'methods' => 'GET'
 )));

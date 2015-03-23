@@ -38,6 +38,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, (bool) $router->match($path));
     }
 
+    /**
+     * @return Router
+     */
     private function getRouter()
     {
         $collection = new RouteCollection();
@@ -60,6 +63,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
         return new Router($collection);
     }
 
+    /**
+     * @return mized[][]
+     */
     public function matcherProvider1()
     {
         $router = $this->getRouter();
@@ -74,6 +80,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return mixed[][]
+     */
     public function matcherProvider2()
     {
         $router = $this->getRouter();
@@ -96,6 +105,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return string[]
+     */
     public function matcherProvider()
     {
         return array_merge($this->matcherProvider1(), $this->matcherProvider2());

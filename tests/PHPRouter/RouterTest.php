@@ -45,6 +45,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
             '_controller' => 'PHPRouter\Test\SomeController::user',
             'methods' => 'GET'
         )));
+        $route = new Route('/page/:page_id', array('_controller' => 'PHPRouter\Test\SomeController::page', 'methods' => 'GET' ));
+        $route->setFilters(['page_id' => '([a-zA-Z]+)'], true);
+        $collection->attachRoute($route);
         $collection->attachRoute(new Route('/', array(
             '_controller' => 'PHPRouter\Test\SomeController::indexAction',
             'methods' => 'GET'
@@ -63,6 +66,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/users', true),
             array($router, '/user/1', true),
             array($router, '/user/%E3%81%82', true),
+            array($router, '/page/MySuperPage', true),
         );
     }
 
@@ -77,12 +81,14 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/users', false),
             array($router, '/user/1', false),
             array($router, '/user/%E3%81%82', false),
+            array($router, '/page/MySuperPage', false),
 
             array($router, '/api', true),
             array($router, '/api/aaa', false),
             array($router, '/api/users', true),
             array($router, '/api/user/1', true),
             array($router, '/api/user/%E3%81%82', true),
+            array($router, '/api/page/MySuperPage', true),
         );
     }
 

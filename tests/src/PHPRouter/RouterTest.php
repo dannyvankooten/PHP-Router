@@ -17,7 +17,7 @@
  */
 namespace PHPRouter\Test;
 
-require __DIR__ . '/../Fixtures/SomeController.php';
+require __DIR__ . '/../../Fixtures/SomeController.php';
 
 use PHPRouter\Route;
 use PHPRouter\Router;

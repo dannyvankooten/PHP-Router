@@ -57,7 +57,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
                 )
             )
         );
-        $result = Config::loadFromFile(__DIR__ . '/../Fixtures/router.yaml');
+        $result = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
 
         $this->assertSame($expected, $result);
     }

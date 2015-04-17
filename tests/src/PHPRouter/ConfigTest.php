@@ -26,6 +26,9 @@ use PHPUnit_Framework_TestCase;
  */
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function testConfigThrowsErrorWithWrongParameter()
     {
         $this->setExpectedException(

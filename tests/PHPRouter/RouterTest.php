@@ -29,9 +29,9 @@ class RouterTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider matcherProvider
      *
-     * @param $router
-     * @param $path
-     * @param $expected
+     * @param Router $router
+     * @param string $path
+     * @param string $expected
      */
     public function testMatch($router, $path, $expected)
     {

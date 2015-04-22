@@ -7,6 +7,11 @@ A simple Rails inspired PHP router class.
 * Reversed routing using named routes
 * Dynamic URL's: use URL segments as parameters.
 
+# Authors
+
+- [Danny van Kooten](https://github.com/dannyvankooten)
+- [Jefersson Nathan](https://github.com/malukenho)
+
 # Easy to install with **composer**
 
 ```javascript

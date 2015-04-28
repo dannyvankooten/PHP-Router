@@ -26,9 +26,10 @@ use PHPRouter\RouteCollection;
 class Router
 {
     /**
-    * Array that holds all Route objects
-    * @var array
-    */
+     * Array that holds all Route objects
+     *
+     * @var array
+     */
     private $routes = array();
 
     /**
@@ -61,8 +62,8 @@ class Router
     }
 
     /**
-    * Matches the current request against mapped routes
-    */
+     * Matches the current request against mapped routes
+     */
     public function matchCurrentRequest()
     {
         $requestMethod = (
@@ -88,6 +89,7 @@ class Router
      *
      * @param string $requestUrl
      * @param string $requestMethod
+     *
      * @return bool|Route
      */
     public function match($requestUrl, $requestMethod = 'GET')
@@ -100,7 +102,7 @@ class Router
             }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^".$this->basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
@@ -135,9 +137,11 @@ class Router
      *
      * @param $routeName
      * @param array $params Optional array of parameters to use in URL
+     *
      * @throws Exception
      *
      * @internal param string $route_name The name of the route to reverse route.
+     *
      * @return string The url to the route
      */
     public function generate($routeName, array $params = array())

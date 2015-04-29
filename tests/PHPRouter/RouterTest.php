@@ -52,7 +52,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
                 'methods' => 'GET'
             )
         );
-        $route->setFilters(['page_id' => '([a-zA-Z]+)'], true);
+        $route->setFilters(array('page_id' => '([a-zA-Z]+)'), true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);

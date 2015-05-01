@@ -88,7 +88,7 @@ class Router
      *
      * @param string $requestUrl
      * @param string $requestMethod
-     * @return bool
+     * @return bool|Route
      */
     public function match($requestUrl, $requestMethod = 'GET')
     {

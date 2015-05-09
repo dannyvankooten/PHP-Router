@@ -134,7 +134,6 @@ class Router
         return false;
     }
 
-
     /**
      * Reverse route a named route
      *
@@ -142,8 +141,6 @@ class Router
      * @param array $params Optional array of parameters to use in URL
      *
      * @throws Exception
-     *
-     * @internal param string $route_name The name of the route to reverse route.
      *
      * @return string The url to the route
      */

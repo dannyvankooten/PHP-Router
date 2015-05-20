@@ -22,5 +22,5 @@ final class SomeController
     public function users_create() {}
     public function indexAction() {}
     public function user() {}
-    public function page() { var_dump(func_get_args()); }
+    public function page() { return func_get_args(); }
 }

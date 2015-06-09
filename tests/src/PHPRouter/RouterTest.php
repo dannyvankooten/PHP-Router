@@ -63,6 +63,40 @@ class RouterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Router::match
+     * @covers Route::getParameters
+     */
+    public function testParamsWithDynamicFilterMatch()
+    {
+        $collection = new RouteCollection();
+        $route = new Route(
+            '/js/:filename.js',
+            array(
+                '_controller' => 'PHPRouter\Test\SomeController::dynamicFilterUrlMatch',
+                'methods' => 'GET',
+            )
+        );
+        $route->setFilters([':filename' => '([[:alnum:]\.]+)'], true);
+        $collection->attachRoute($route);
+
+        $router = new Router($collection);
+        $this->assertEquals(
+            array(array('filename' => 'someJsFile')),
+            $router->match('/js/someJsFile.js')->getParameters()
+        );
+
+        $this->assertEquals(
+            array(array('filename' => 'someJsFile.min')),
+            $router->match('/js/someJsFile.min.js')->getParameters()
+        );
+
+        $this->assertEquals(
+            array(array('filename' => 'someJsFile.min.js')),
+            $router->match('/js/someJsFile.min.js.js')->getParameters()
+        );
+    }
+
+    /**
      * @return Router
      */
     private function getRouter()

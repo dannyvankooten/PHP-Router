@@ -76,7 +76,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
                 'methods' => 'GET',
             )
         );
-        $route->setFilters([':filename' => '([[:alnum:]\.]+)'], true);
+        $route->setFilters(array(':filename' => '([[:alnum:]\.]+)'), true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);

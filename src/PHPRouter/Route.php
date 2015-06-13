@@ -130,15 +130,14 @@ class Route
     {
         $this->filters = $filters;
         
-        if($parametersByName) {
-          $this->parametersByName = true;
+        if ($parametersByName) {
+            $this->parametersByName = true;
         }
-        
     }
 
     public function getRegex()
     {
-        return preg_replace_callback("/:(\w+)/", array(&$this, 'substituteFilter'), $this->url);
+        return preg_replace_callback("/(:\w+)/", array(&$this, 'substituteFilter'), $this->url);
     }
 
     private function substituteFilter($matches)

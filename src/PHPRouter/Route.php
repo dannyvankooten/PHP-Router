@@ -27,7 +27,6 @@ class Route
 
     /**
      * Accepted HTTP methods for this route.
-     *
      * @var string[]
      */
     private $methods = array('GET', 'POST', 'PUT', 'DELETE');
@@ -56,6 +55,13 @@ class Route
      */
     private $parameters = array();
 
+    /**
+     * Set named parameters to target method
+     * @example [ [0] => [ ["link_id"] => "12312" ] ]
+     * @var bool
+     */
+    private $parametersByName;
+    
     /**
      * @var array
      */
@@ -120,9 +126,14 @@ class Route
         $this->name = (string)$name;
     }
 
-    public function setFilters(array $filters)
+    public function setFilters(array $filters, $parametersByName = false)
     {
         $this->filters = $filters;
+        
+        if($parametersByName) {
+          $this->parametersByName = true;
+        }
+        
     }
 
     public function getRegex()
@@ -143,7 +154,7 @@ class Route
     {
         return $this->parameters;
     }
-
+    
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
@@ -153,6 +164,11 @@ class Route
     {
         $action = explode('::', $this->config['_controller']);
         $instance = new $action[0];
+        
+        if($this->parametersByName) {
+          $this->parameters = array($this->parameters);
+        }
+        
         call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
 }

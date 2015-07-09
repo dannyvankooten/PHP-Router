@@ -38,6 +38,33 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, (bool) $router->match($path));
     }
 
+    public function testBasePathConfigIsSettedProperly()
+    {
+        $router =  new Router(new RouteCollection);
+        $router->setBasePath('/webroot/');
+
+        $this->assertAttributeEquals('/webroot', 'basePath', $router);
+    }
+
+    public function testMatchRouterUsingBasePath()
+    {
+        $collection = new RouteCollection();
+        $collection->attach(new Route('/users/', array(
+            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            'methods' => 'GET'
+        )));
+
+        $router =  new Router($collection);
+        $router->setBasePath('/localhost/webroot');
+
+        $_SERVER                   = [];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/localhost/webroot/users/';
+        $_SERVER['SCRIPT_NAME']    = 'index.php';
+
+        $this->assertTrue((bool) $router->matchCurrentRequest());
+    }
+
     /**
      * @covers Router::match
      * @covers Route::getParameters

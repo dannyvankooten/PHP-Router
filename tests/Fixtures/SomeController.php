@@ -19,9 +19,24 @@ namespace PHPRouter\Test;
 
 final class SomeController
 {
-    public function users_create() {}
-    public function indexAction() {}
-    public function user() {}
-    public function page() { return func_get_args(); }
-    public function dynamicFilterUrlMatch() { return func_get_args(); }
+    public function users_create()
+    {
+    }
+
+    public function indexAction()
+    {
+    }
+
+    public function user()
+    {
+    }
+
+    public function page()
+    {
+        return func_get_args();
+    }
+
+    public function dynamicFilterUrlMatch() {
+        return func_get_args();
+    }
 }

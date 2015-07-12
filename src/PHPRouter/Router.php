@@ -58,7 +58,7 @@ class Router
      */
     public function setBasePath($basePath)
     {
-        $this->basePath = (string) $basePath;
+        $this->basePath = rtrim($basePath, '/');
     }
 
     /**

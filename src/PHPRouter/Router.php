@@ -154,6 +154,7 @@ class Router
             throw new Exception("No route with the name $routeName has been found.");
         }
 
+        /** @var \PHPRouter\Route $route */
         $route = $this->namedRoutes[$routeName];
         $url = $route->getUrl();
 

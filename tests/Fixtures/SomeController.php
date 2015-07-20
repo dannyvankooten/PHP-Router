@@ -31,12 +31,19 @@ final class SomeController
     {
     }
 
+    /**
+     * @return mixed[]
+     */
     public function page()
     {
         return func_get_args();
     }
 
-    public function dynamicFilterUrlMatch() {
+    /**
+     * @return mixed[]
+     */
+    public function dynamicFilterUrlMatch()
+    {
         return func_get_args();
     }
 }

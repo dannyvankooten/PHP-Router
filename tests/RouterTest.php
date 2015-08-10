@@ -2,8 +2,6 @@
 
 namespace PHPRouter\Test;
 
-require_once "SomeController.php";
-
 use PHPRouter\RouteCollection;
 use PHPRouter\Router;
 use PHPRouter\Route;
@@ -11,6 +9,41 @@ use PHPUnit_Framework_TestCase;
 
 class RouterTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @dataProvider matcherProvider
+     */
+    public function testMatch($router, $path, $expected)
+    {
+        $this->assertEquals($expected, !!$router->match($path));
+    }
+
+    public function testBasePathConfigIsSettedProperly()
+    {
+        $router =  new Router(new RouteCollection);
+        $router->setBasePath('/webroot/');
+
+        $this->assertAttributeEquals('/webroot', 'basePath', $router);
+    }
+
+    public function testMatchRouterUsingBasePath()
+    {
+        $collection = new RouteCollection();
+        $collection->attach(new Route('/users/', array(
+            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            'methods' => 'GET'
+        )));
+
+        $router =  new Router($collection);
+        $router->setBasePath('/localhost/webroot');
+
+        $_SERVER = [];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/localhost/webroot/users/';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $this->assertTrue((bool) $router->matchCurrentRequest());
+    }
+
     private function getRouter()
     {
         $collection = new RouteCollection();
@@ -65,39 +98,5 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function matcherProvider()
     {
         return array_merge($this->matcherProvider1(), $this->matcherProvider2());
-    }
-
-    /**
-     * @dataProvider matcherProvider
-     */
-    public function testMatch($router, $path, $expected)
-    {
-        $this->assertEquals($expected, !!$router->match($path));
-    }
-
-    public function testBasePathConfigIsSettedProperly()
-    {
-        $router =  new Router(new RouteCollection);
-        $router->setBasePath('/webroot/');
-
-        $this->assertAttributeEquals('/webroot', '_basePath', $router);
-    }
-
-    public function testMatchRouterUsingBasePath()
-    {
-        $collection = new RouteCollection();
-        $collection->attach(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::users_create',
-            'methods' => 'GET'
-        )));
-
-        $router =  new Router($collection);
-        $router->setBasePath('/localhost/webroot');
-
-        $_SERVER = [];
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/localhost/webroot/users/';
-
-        $this->assertTrue((bool) $router->matchCurrentRequest());
     }
 }

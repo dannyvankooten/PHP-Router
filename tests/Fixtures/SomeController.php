@@ -46,4 +46,9 @@ final class SomeController
     {
         return func_get_args();
     }
+
+    public function articleAction()
+    {
+        return func_get_args();
+    }
 }

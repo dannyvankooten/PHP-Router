@@ -19,6 +19,7 @@ namespace PHPRouterTest\Test;
 
 require __DIR__ . '/../../Fixtures/SomeController.php';
 
+use PHPRouter\Config;
 use PHPRouter\Route;
 use PHPRouter\Router;
 use PHPRouter\RouteCollection;
@@ -120,6 +121,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(array('filename' => 'someJsFile.min.js')),
             $router->match('/js/someJsFile.min.js.js')->getParameters()
+        );
+    }
+
+    public function testYaml(){
+        $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
+        $router = Router::parseConfig($config);
+        $this->assertEquals(
+            array(array('param' => '1234')),
+            $router->match('/blog/article/1234')->getParameters()
         );
     }
 

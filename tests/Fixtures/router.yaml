@@ -1,6 +1,21 @@
 base_path: /blog
 
 routes:
-  index: [/index, Controller.method, GET]
-  contact: [/contact, someClass.contactAction, GET]
-  about: [/about, someClass.aboutAction, GET]
+  index:
+    path: /index
+    controller: Controller.method
+    method: GET
+  contact:
+    path: /contact
+    controller: someClass.contactAction
+    method: GET
+  about:
+    path: /about
+    controller: someClass.aboutAction
+    method: GET
+  param:
+    path: /article/:param
+    controller: PHPRouter\Test\SomeController.articleAction
+    method: GET
+    params:
+      param: ([0-9]+)

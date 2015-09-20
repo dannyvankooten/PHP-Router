@@ -102,7 +102,9 @@ class Router
             }
 
             $currentDir = dirname($_SERVER['SCRIPT_NAME']);
-            $requestUrl = str_replace($currentDir, '', $requestUrl);
+            if ($currentDir != '/') {
+                $requestUrl = str_replace($currentDir, '', $requestUrl);    
+            }           
 
             // check if request _url matches route regex. if not, return false.
             if (! preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {

@@ -76,7 +76,7 @@ class Router
 
         // strip GET variables from URL
         if (($pos = strpos($requestUrl, '?')) !== false) {
-            $requestUrl =  substr($requestUrl, 0, $pos);
+            $requestUrl = substr($requestUrl, 0, $pos);
         }
 
         return $this->match($requestUrl, $requestMethod);
@@ -97,7 +97,7 @@ class Router
         foreach ($this->routes->all() as $routes) {
 
             // compare server request method with route's allowed http methods
-            if (! in_array($requestMethod, (array) $routes->getMethods())) {
+            if (!in_array($requestMethod, (array)$routes->getMethods())) {
                 continue;
             }
 
@@ -107,7 +107,7 @@ class Router
             }           
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
+            if (!preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
@@ -132,7 +132,6 @@ class Router
 
             return $routes;
         }
-
         return false;
     }
 
@@ -149,7 +148,7 @@ class Router
     public function generate($routeName, array $params = array())
     {
         // Check if route exists
-        if (! isset($this->namedRoutes[$routeName])) {
+        if (!isset($this->namedRoutes[$routeName])) {
             throw new Exception("No route with the name $routeName has been found.");
         }
 
@@ -183,10 +182,18 @@ class Router
     {
         $collection = new RouteCollection();
         foreach ($config['routes'] as $name => $route) {
-            $collection->attachRoute(new Route($route[0], array(
-                '_controller' => str_replace('.', '::', $route[1]),
-                'methods' => $route[2]
-            )));
+            $r = new Route($route['path'], [
+                '_controller' => str_replace('.', '::', $route['controller']),
+                'methods' => $route['method']
+            ]);
+            if (isset($route['params'])) {
+                $filters = [];
+                foreach ($route['params'] as $filter => $pattern) {
+                    $filters[] = [$filter => ':' . $pattern];
+                }
+                $r->setFilters($filters, true);
+            }
+            $collection->attachRoute($r);
         }
 
         $router = new Router($collection);

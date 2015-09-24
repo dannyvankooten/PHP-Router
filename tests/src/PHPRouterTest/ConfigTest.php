@@ -44,19 +44,27 @@ class ConfigTest extends PHPUnit_Framework_TestCase
             'base_path' => '/blog',
             'routes'    => array(
                 'index' => array(
-                    '/index',
-                    'Controller.method',
-                    'GET'
+                    'path' => '/index',
+                    'controller' => 'Controller.method',
+                    'method' => 'GET'
                 ),
                 'contact' => array(
-                    '/contact',
-                    'someClass.contactAction',
-                    'GET',
+                    'path' => '/contact',
+                    'controller' => 'someClass.contactAction',
+                    'method' => 'GET',
                 ),
                 'about' => array(
-                    '/about',
-                    'someClass.aboutAction',
-                    'GET',
+                    'path' => '/about',
+                    'controller' => 'someClass.aboutAction',
+                    'method' => 'GET',
+                ),
+                'param' => array(
+                    'path' => '/article/:param',
+                    'controller' => 'PHPRouter\Test\SomeController.articleAction',
+                    'method' => 'GET',
+                    'params' => array(
+                        'param' => '([0-9]+)'
+                    )
                 )
             )
         );

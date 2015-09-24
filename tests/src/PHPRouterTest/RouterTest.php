@@ -57,17 +57,23 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router =  new Router($collection);
         $router->setBasePath('/localhost/webroot');
 
-        $_SERVER                   = [];
+        // backup $_SERVER before test
+        $backupSERVER = $_SERVER;
+
+        $_SERVER                   = array();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/localhost/webroot/users/';
         $_SERVER['SCRIPT_NAME']    = 'index.php';
 
         $this->assertTrue((bool) $router->matchCurrentRequest());
+
+        // restore $_SERVER after test
+        $_SERVER = $backupSERVER;
     }
 
     /**
-     * @covers Router::match
-     * @covers Route::getParameters
+     * @covers PHPRouter\Router::match
+     * @covers PHPRouter\Route::getParameters
      */
     public function testGetParamsInsideControllerMethod()
     {
@@ -90,8 +96,8 @@ class RouterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Router::match
-     * @covers Route::getParameters
+     * @covers PHPRouter\Router::match
+     * @covers PHPRouter\Route::getParameters
      */
     public function testParamsWithDynamicFilterMatch()
     {

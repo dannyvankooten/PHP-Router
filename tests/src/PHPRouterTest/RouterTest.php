@@ -17,8 +17,7 @@
  */
 namespace PHPRouterTest\Test;
 
-require __DIR__ . '/../../Fixtures/SomeController.php';
-
+use PHPRouter\Config;
 use PHPRouter\Route;
 use PHPRouter\Router;
 use PHPRouter\RouteCollection;
@@ -35,12 +34,12 @@ class RouterTest extends PHPUnit_Framework_TestCase
      */
     public function testMatch($router, $path, $expected)
     {
-        $this->assertEquals($expected, (bool) $router->match($path));
+        $this->assertEquals($expected, (bool)$router->match($path));
     }
 
     public function testBasePathConfigIsSettedProperly()
     {
-        $router =  new Router(new RouteCollection);
+        $router = new Router(new RouteCollection);
         $router->setBasePath('/webroot/');
 
         $this->assertAttributeEquals('/webroot', 'basePath', $router);
@@ -50,25 +49,21 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $collection = new RouteCollection();
         $collection->attach(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
             'methods' => 'GET'
         )));
 
-        $router =  new Router($collection);
+        $router = new Router($collection);
         $router->setBasePath('/localhost/webroot');
 
-        $_SERVER                   = [];
+        $_SERVER = array();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/localhost/webroot/users/';
-        $_SERVER['SCRIPT_NAME']    = 'index.php';
+        $_SERVER['REQUEST_URI'] = '/localhost/webroot/users/';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
 
-        $this->assertTrue((bool) $router->matchCurrentRequest());
+        $this->assertTrue((bool)$router->matchCurrentRequest());
     }
 
-    /**
-     * @covers Router::match
-     * @covers Route::getParameters
-     */
     public function testGetParamsInsideControllerMethod()
     {
         $collection = new RouteCollection();
@@ -89,10 +84,6 @@ class RouterTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers Router::match
-     * @covers Route::getParameters
-     */
     public function testParamsWithDynamicFilterMatch()
     {
         $collection = new RouteCollection();
@@ -123,6 +114,13 @@ class RouterTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testParseConfig()
+    {
+        $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
+        $router = Router::parseConfig($config);
+        $this->assertAttributeEquals($config['base_path'], 'basePath', $router);
+    }
+
     /**
      * @return Router
      */
@@ -130,7 +128,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $collection = new RouteCollection();
         $collection->attachRoute(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
             'methods' => 'GET'
         )));
         $collection->attachRoute(new Route('/user/:id', array(
@@ -151,6 +149,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function matcherProvider1()
     {
         $router = $this->getRouter();
+
         return array(
             array($router, '', true),
             array($router, '/', true),
@@ -168,6 +167,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $router = $this->getRouter();
         $router->setBasePath('/api');
+
         return array(
             array($router, '', false),
             array($router, '/', false),
@@ -175,7 +175,6 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/users', false),
             array($router, '/user/1', false),
             array($router, '/user/%E3%81%82', false),
-
             array($router, '/api', true),
             array($router, '/api/aaa', false),
             array($router, '/api/users', true),

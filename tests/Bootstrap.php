@@ -1,4 +1,5 @@
 <?php
+
 /**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -15,38 +16,11 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouter;
 
-/**
- * @author Jefersson Nathan <malukenho@phpse.net>
- *
- * @package PHPRouter
- */
-class RouteCollection extends \SplObjectStorage
-{
-    /**
-     * Attach a Route to the collection.
-     *
-     * @param Route $attachObject
-     */
-    public function attachRoute(Route $attachObject)
-    {
-        parent::attach($attachObject, null);
-    }
-
-    /**
-     * Fetch all routers stored on this collection of router
-     * and return it.
-     *
-     * @return Route[]
-     */
-    public function all()
-    {
-        $temp = array();
-        foreach ($this as $router) {
-            $temp[] = $router;
-        }
-
-        return $temp;
-    }
+error_reporting(E_ALL);
+if (function_exists('date_default_timezone_set') && function_exists('date_default_timezone_get')) {
+    date_default_timezone_set(@date_default_timezone_get());
 }
+
+require_once __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/Fixtures/SomeController.php';

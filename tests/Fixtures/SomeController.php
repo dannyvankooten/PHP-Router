@@ -19,7 +19,7 @@ namespace PHPRouter\Test;
 
 final class SomeController
 {
-    public function users_create()
+    public function usersCreate()
     {
     }
 

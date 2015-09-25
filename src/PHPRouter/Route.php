@@ -61,7 +61,7 @@ class Route
      * @var bool
      */
     private $parametersByName;
-    
+
     /**
      * @var array
      */
@@ -73,10 +73,10 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->url     = $resource;
-        $this->config  = $config;
+        $this->url = $resource;
+        $this->config = $config;
         $this->methods = isset($config['methods']) ? $config['methods'] : array();
-        $this->target  = isset($config['target'])  ? $config['target']  : null;
+        $this->target = isset($config['target']) ? $config['target'] : null;
     }
 
     public function getUrl()
@@ -129,7 +129,7 @@ class Route
     public function setFilters(array $filters, $parametersByName = false)
     {
         $this->filters = $filters;
-        
+
         if ($parametersByName) {
             $this->parametersByName = true;
         }
@@ -153,7 +153,7 @@ class Route
     {
         return $this->parameters;
     }
-    
+
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
@@ -163,11 +163,11 @@ class Route
     {
         $action = explode('::', $this->config['_controller']);
         $instance = new $action[0];
-        
-        if($this->parametersByName) {
-          $this->parameters = array($this->parameters);
+
+        if ($this->parametersByName) {
+            $this->parameters = array($this->parameters);
         }
-        
+
         call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
 }

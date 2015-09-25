@@ -35,12 +35,12 @@ class RouterTest extends PHPUnit_Framework_TestCase
      */
     public function testMatch($router, $path, $expected)
     {
-        $this->assertEquals($expected, (bool) $router->match($path));
+        $this->assertEquals($expected, (bool)$router->match($path));
     }
 
     public function testBasePathConfigIsSettedProperly()
     {
-        $router =  new Router(new RouteCollection);
+        $router = new Router(new RouteCollection);
         $router->setBasePath('/webroot/');
 
         $this->assertAttributeEquals('/webroot', 'basePath', $router);
@@ -54,21 +54,15 @@ class RouterTest extends PHPUnit_Framework_TestCase
             'methods' => 'GET'
         )));
 
-        $router =  new Router($collection);
+        $router = new Router($collection);
         $router->setBasePath('/localhost/webroot');
 
-        // backup $_SERVER before test
-        $backupSERVER = $_SERVER;
-
-        $_SERVER                   = array();
+        $_SERVER = array();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/localhost/webroot/users/';
-        $_SERVER['SCRIPT_NAME']    = 'index.php';
+        $_SERVER['REQUEST_URI'] = '/localhost/webroot/users/';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
 
-        $this->assertTrue((bool) $router->matchCurrentRequest());
-
-        // restore $_SERVER after test
-        $_SERVER = $backupSERVER;
+        $this->assertTrue((bool)$router->matchCurrentRequest());
     }
 
     /**
@@ -157,6 +151,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function matcherProvider1()
     {
         $router = $this->getRouter();
+
         return array(
             array($router, '', true),
             array($router, '/', true),
@@ -174,6 +169,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $router = $this->getRouter();
         $router->setBasePath('/api');
+
         return array(
             array($router, '', false),
             array($router, '/', false),
@@ -181,7 +177,6 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/users', false),
             array($router, '/user/1', false),
             array($router, '/user/%E3%81%82', false),
-
             array($router, '/api', true),
             array($router, '/api/aaa', false),
             array($router, '/api/users', true),

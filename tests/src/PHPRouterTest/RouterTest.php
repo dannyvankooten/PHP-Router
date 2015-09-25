@@ -17,6 +17,7 @@
  */
 namespace PHPRouterTest\Test;
 
+use PHPRouter\Config;
 use PHPRouter\Route;
 use PHPRouter\Router;
 use PHPRouter\RouteCollection;
@@ -63,10 +64,6 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue((bool)$router->matchCurrentRequest());
     }
 
-    /**
-     * @covers PHPRouter\Router::match
-     * @covers PHPRouter\Route::getParameters
-     */
     public function testGetParamsInsideControllerMethod()
     {
         $collection = new RouteCollection();
@@ -87,10 +84,6 @@ class RouterTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers PHPRouter\Router::match
-     * @covers PHPRouter\Route::getParameters
-     */
     public function testParamsWithDynamicFilterMatch()
     {
         $collection = new RouteCollection();
@@ -119,6 +112,13 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array(array('filename' => 'someJsFile.min.js')),
             $router->match('/js/someJsFile.min.js.js')->getParameters()
         );
+    }
+
+    public function testParseConfig()
+    {
+        $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
+        $router = Router::parseConfig($config);
+        $this->assertAttributeEquals($config['base_path'], 'basePath', $router);
     }
 
     /**

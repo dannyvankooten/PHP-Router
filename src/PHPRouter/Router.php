@@ -76,7 +76,7 @@ class Router
 
         // strip GET variables from URL
         if (($pos = strpos($requestUrl, '?')) !== false) {
-            $requestUrl =  substr($requestUrl, 0, $pos);
+            $requestUrl = substr($requestUrl, 0, $pos);
         }
 
         return $this->match($requestUrl, $requestMethod);
@@ -95,26 +95,24 @@ class Router
     public function match($requestUrl, $requestMethod = 'GET')
     {
         foreach ($this->routes->all() as $routes) {
-
             // compare server request method with route's allowed http methods
-            if (! in_array($requestMethod, (array) $routes->getMethods())) {
+            if (!in_array($requestMethod, (array)$routes->getMethods())) {
                 continue;
             }
 
             $currentDir = dirname($_SERVER['SCRIPT_NAME']);
             if ($currentDir != '/') {
-                $requestUrl = str_replace($currentDir, '', $requestUrl);    
-            }           
+                $requestUrl = str_replace($currentDir, '', $requestUrl);
+            }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
+            if (!preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
             $params = array();
 
             if (preg_match_all("/:([\w-%]+)/", $routes->getUrl(), $argument_keys)) {
-
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
@@ -149,7 +147,7 @@ class Router
     public function generate($routeName, array $params = array())
     {
         // Check if route exists
-        if (! isset($this->namedRoutes[$routeName])) {
+        if (!isset($this->namedRoutes[$routeName])) {
             throw new Exception("No route with the name $routeName has been found.");
         }
 

@@ -46,7 +46,7 @@ use PHPRouter\Route;
 
 $collection = new RouteCollection();
 $collection->attachRoute(new Route('/users/', array(
-    '_controller' => 'someController::users_create',
+    '_controller' => 'someController::usersCreate',
     'methods' => 'GET'
 )));
 

@@ -17,8 +17,6 @@
  */
 namespace PHPRouterTest\Test;
 
-require __DIR__ . '/../../Fixtures/SomeController.php';
-
 use PHPRouter\Route;
 use PHPRouter\Router;
 use PHPRouter\RouteCollection;
@@ -50,7 +48,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $collection = new RouteCollection();
         $collection->attach(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
             'methods' => 'GET'
         )));
 
@@ -130,7 +128,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $collection = new RouteCollection();
         $collection->attachRoute(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::users_create',
+            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
             'methods' => 'GET'
         )));
         $collection->attachRoute(new Route('/user/:id', array(

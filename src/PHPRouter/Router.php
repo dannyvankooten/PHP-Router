@@ -50,6 +50,12 @@ class Router
     public function __construct(RouteCollection $collection)
     {
         $this->routes = $collection;
+
+        foreach ($this->routes->all() as $route) {
+            if (!is_null($route->getName())) {
+                $this->namedRoutes[$route->getName()] = $route;
+            }
+        }
     }
 
     /**
@@ -183,7 +189,8 @@ class Router
         foreach ($config['routes'] as $name => $route) {
             $collection->attachRoute(new Route($route[0], array(
                 '_controller' => str_replace('.', '::', $route[1]),
-                'methods' => $route[2]
+                'methods' => $route[2],
+                'name' => $name
             )));
         }
 

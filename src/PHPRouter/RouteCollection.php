@@ -35,16 +35,15 @@ class RouteCollection extends \SplObjectStorage
     }
 
     /**
-     * Fetch all routers stored on this collection of router
-     * and return it.
+     * Fetch all routes stored on this collection of routes and return it.
      *
      * @return Route[]
      */
     public function all()
     {
         $temp = array();
-        foreach ($this as $router) {
-            $temp[] = $router;
+        foreach ($this as $route) {
+            $temp[] = $route;
         }
 
         return $temp;

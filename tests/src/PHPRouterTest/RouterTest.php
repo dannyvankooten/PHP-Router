@@ -37,6 +37,12 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, (bool)$router->match($path));
     }
 
+    public function testMatchWrongMethod()
+    {
+        $router = $this->getRouter();
+        $this->assertFalse($router->match('/users', 'POST'));
+    }
+
     public function testBasePathConfigIsSettedProperly()
     {
         $router = new Router(new RouteCollection);
@@ -56,12 +62,26 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router = new Router($collection);
         $router->setBasePath('/localhost/webroot');
 
-        $_SERVER = array();
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/localhost/webroot/users/';
-        $_SERVER['SCRIPT_NAME'] = 'index.php';
+        foreach ($this->serverProvider() as $server) {
+            $_SERVER = $server;
+            $this->assertTrue((bool)$router->matchCurrentRequest());
+        }
+    }
 
-        $this->assertTrue((bool)$router->matchCurrentRequest());
+    private function serverProvider()
+    {
+        return array(
+            array(
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/localhost/webroot/users/',
+                'SCRIPT_NAME' => 'index.php'
+            ),
+            array(
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/localhost/webroot/users/?foo=bar&bar=foo',
+                'SCRIPT_NAME' => 'index.php'
+            ),
+        );
     }
 
     public function testGetParamsInsideControllerMethod()

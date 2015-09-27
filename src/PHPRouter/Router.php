@@ -26,9 +26,9 @@ use PHPRouter\RouteCollection;
 class Router
 {
     /**
-     * Array that holds all Route objects
+     * RouteCollection that holds all Route objects
      *
-     * @var array
+     * @var RouteCollection
      */
     private $routes = array();
 

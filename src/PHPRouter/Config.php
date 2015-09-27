@@ -30,6 +30,8 @@ final class Config
 {
     /**
      * Avoid instantiation.
+     *
+     * @codeCoverageIgnore
      */
     private function __construct()
     {

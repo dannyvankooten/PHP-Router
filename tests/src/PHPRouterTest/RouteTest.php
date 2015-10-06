@@ -33,7 +33,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
                 'methods' => array(
                     'GET'
                 ),
-                'target' => 'thisIsAString'
+                'target' => 'thisIsAString',
+                'name' => 'page'
             )
         );
     }
@@ -75,5 +76,16 @@ class RouteTest extends PHPUnit_Framework_TestCase
     {
         $this->routeWithParameters->setTarget('ThisIsAnotherString');
         $this->assertEquals('ThisIsAnotherString', $this->routeWithParameters->getTarget());
+    }
+
+    public function testGetName()
+    {
+        $this->assertEquals('page', $this->routeWithParameters->getName());
+    }
+
+    public function testSetName()
+    {
+        $this->routeWithParameters->setName('pageroute');
+        $this->assertEquals('pageroute', $this->routeWithParameters->getName());
     }
 }

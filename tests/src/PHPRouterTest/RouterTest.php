@@ -121,6 +121,22 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($config['base_path'], 'basePath', $router);
     }
 
+    public function testGenerate()
+    {
+        $router = $this->getRouter();
+        $this->assertSame('/users/', $router->generate('users'));
+        $this->assertSame('/user/123', $router->generate('user', array('id' => 123)));
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testGenerateNotExistent()
+    {
+        $router = $this->getRouter();
+        $this->assertSame('/notExists/', $router->generate('notThisRoute'));
+    }
+
     /**
      * @return Router
      */
@@ -129,15 +145,18 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $collection = new RouteCollection();
         $collection->attachRoute(new Route('/users/', array(
             '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
-            'methods' => 'GET'
+            'methods' => 'GET',
+            'name' => 'users'
         )));
         $collection->attachRoute(new Route('/user/:id', array(
             '_controller' => 'PHPRouter\Test\SomeController::user',
-            'methods' => 'GET'
+            'methods' => 'GET',
+            'name' => 'user'
         )));
         $collection->attachRoute(new Route('/', array(
             '_controller' => 'PHPRouter\Test\SomeController::indexAction',
-            'methods' => 'GET'
+            'methods' => 'GET',
+            'name' => 'index'
         )));
 
         return new Router($collection);

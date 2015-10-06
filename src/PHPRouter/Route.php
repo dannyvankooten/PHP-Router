@@ -41,7 +41,7 @@ class Route
      * The name of this route, used for reversed routing
      * @var string
      */
-    private $name;
+    private $name = null;
 
     /**
      * Custom parameter filters for this route
@@ -75,8 +75,9 @@ class Route
     {
         $this->url = $resource;
         $this->config = $config;
-        $this->methods = isset($config['methods']) ? $config['methods'] : array();
+        $this->methods = isset($config['methods']) ? (array)$config['methods'] : array();
         $this->target = isset($config['target']) ? $config['target'] : null;
+        $this->name = isset($config['name']) ? $config['name'] : null;
     }
 
     public function getUrl()

@@ -170,4 +170,10 @@ class Route
 
         call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
+
+    public function getAction()
+    {
+        $action = explode('::', $this->config['_controller']);
+        return $action[1];
+    }
 }

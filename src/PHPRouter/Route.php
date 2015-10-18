@@ -169,6 +169,10 @@ class Route
             $this->parameters = array($this->parameters);
         }
 
+        if(empty($action[1]) || trim($action[1]) == '') {
+          $action[1] = '__construct';
+        }
+
         call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
 }

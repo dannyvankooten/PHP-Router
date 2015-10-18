@@ -15,7 +15,7 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouter\Test;
+namespace PHPRouterTest\Test;
 
 use PHPRouter\Config;
 use PHPUnit_Framework_TestCase;
@@ -26,6 +26,9 @@ use PHPUnit_Framework_TestCase;
  */
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function testConfigThrowsErrorWithWrongParameter()
     {
         $this->setExpectedException(
@@ -57,7 +60,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
                 )
             )
         );
-        $result = Config::loadFromFile(__DIR__ . '/../Fixtures/router.yaml');
+        $result = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
 
         $this->assertSame($expected, $result);
     }

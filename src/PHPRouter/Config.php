@@ -30,6 +30,8 @@ final class Config
 {
     /**
      * Avoid instantiation.
+     *
+     * @codeCoverageIgnore
      */
     private function __construct()
     {
@@ -43,7 +45,7 @@ final class Config
      */
     public static function loadFromFile($yamlFile)
     {
-        if (! is_file($yamlFile)) {
+        if (!is_file($yamlFile)) {
             throw new InvalidArgumentException(sprintf('The file %s not exists!', $yamlFile));
         }
 

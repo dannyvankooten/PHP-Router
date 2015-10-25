@@ -17,6 +17,11 @@
  */
 namespace PHPRouter;
 
+/**
+ * @author Jefersson Nathan <malukenho@phpse.net>
+ *
+ * @package PHPRouter
+ */
 class RouteCollection extends \SplObjectStorage
 {
     /**

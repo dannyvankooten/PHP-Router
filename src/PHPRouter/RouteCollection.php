@@ -20,6 +20,16 @@ namespace PHPRouter;
 class RouteCollection extends \SplObjectStorage
 {
     /**
+     * {@inheritDoc}
+     *
+     * @param Route $attachObject
+     */
+    public function attach(Route $attachObject)
+    {
+        parent::attach($attachObject);
+    }
+
+    /**
      * Fetch all routers stored on this collection of router
      * and return it.
      *

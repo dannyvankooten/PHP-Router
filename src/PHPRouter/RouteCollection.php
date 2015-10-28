@@ -27,11 +27,11 @@ class RouteCollection extends \SplObjectStorage
      */
     public function all()
     {
-        $_tmp = array();
-        foreach ($this as $objectValue) {
-            $_tmp[] = $objectValue;
+        $temp = [];
+        foreach ($this as $router) {
+            $temp[] = $router;
         }
 
-        return $_tmp;
+        return $temp;
     }
 }

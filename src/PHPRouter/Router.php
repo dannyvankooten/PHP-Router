@@ -65,7 +65,12 @@ class Router
     */
     public function matchCurrentRequest()
     {
-        $requestMethod = (isset($_POST['_method']) && ($_method = strtoupper($_POST['_method'])) && in_array($_method,array('PUT','DELETE'))) ? $_method : $_SERVER['REQUEST_METHOD'];
+        $requestMethod = (
+            isset($_POST['_method'])
+            && ($_method = strtoupper($_POST['_method']))
+            && in_array($_method, array('PUT', 'DELETE'))
+        ) ? $_method : $_SERVER['REQUEST_METHOD'];
+
         $requestUrl = $_SERVER['REQUEST_URI'];
 
         // strip GET variables from URL
@@ -146,16 +151,15 @@ class Router
         $url = $route->getUrl();
 
         // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys))
-        {
-
+        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
             // grab array with matches
             $param_keys = $param_keys[1];
 
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $key) {
-                if (isset($params[$key]))
+                if (isset($params[$key])) {
                     $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+                }
             }
         }
 

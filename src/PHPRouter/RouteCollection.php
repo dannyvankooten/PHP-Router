@@ -23,7 +23,7 @@ class RouteCollection extends \SplObjectStorage
      * Fetch all routers stored on this collection of router
      * and return it.
      *
-     * @return array
+     * @return Route[]
      */
     public function all()
     {

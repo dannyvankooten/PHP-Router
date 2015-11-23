@@ -77,7 +77,7 @@ class Route
         $url = (string) $url;
 
         // make sure that the URL is suffixed with a forward slash
-        if(substr($url,-1) !== '/') {
+        if (substr($url, -1) !== '/') {
             $url .= '/';
         }
 

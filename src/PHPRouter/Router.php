@@ -158,6 +158,7 @@ class Router
                     $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
             }
         }
+
         return $url;
     }
 
@@ -182,6 +183,7 @@ class Router
         if (isset($config['base_path'])) {
             $router->setBasePath($config['base_path']);
         }
+
         return $router;
     }
 }

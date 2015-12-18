@@ -29,26 +29,26 @@ class Router
     * Array that holds all Route objects
     * @var array
     */
-    private $_routes = array();
+    private $routes = array();
 
     /**
      * Array to store named routes in, used for reverse routing.
      * @var array
      */
-    private $_namedRoutes = array();
+    private $namedRoutes = array();
 
     /**
-     * The base REQUEST_URI. Gets prepended to all route _url's.
+     * The base REQUEST_URI. Gets prepended to all route url's.
      * @var string
      */
-    private $_basePath = '';
+    private $basePath = '';
 
     /**
      * @param RouteCollection $collection
      */
     public function __construct(RouteCollection $collection)
     {
-        $this->_routes = $collection;
+        $this->routes = $collection;
     }
 
     /**
@@ -57,7 +57,7 @@ class Router
      */
     public function setBasePath($basePath)
     {
-        $this->_basePath = (string) $basePath;
+        $this->basePath = (string) $basePath;
     }
 
     /**
@@ -87,7 +87,7 @@ class Router
      */
     public function match($requestUrl, $requestMethod = 'GET')
     {
-        foreach ($this->_routes->all() as $routes) {
+        foreach ($this->routes->all() as $routes) {
 
             // compare server request method with route's allowed http methods
             if (! in_array($requestMethod, (array) $routes->getMethods())) {
@@ -95,7 +95,7 @@ class Router
             }
 
             // check if request _url matches route regex. if not, return false.
-            if (! preg_match("@^".$this->_basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^".$this->basePath.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
                 continue;
             }
 
@@ -120,6 +120,7 @@ class Router
 
             return $routes;
         }
+
         return false;
     }
 
@@ -137,11 +138,11 @@ class Router
     public function generate($routeName, array $params = array())
     {
         // Check if route exists
-        if (! isset($this->_namedRoutes[$routeName])) {
+        if (! isset($this->namedRoutes[$routeName])) {
             throw new Exception("No route with the name $routeName has been found.");
         }
 
-        $route = $this->_namedRoutes[$routeName];
+        $route = $this->namedRoutes[$routeName];
         $url = $route->getUrl();
 
         // replace route url with given parameters

@@ -6,7 +6,6 @@
          backupGlobals="true"
          backupStaticAttributes="false"
          colors="true"
-         syntaxCheck="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"

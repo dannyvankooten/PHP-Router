@@ -115,12 +115,18 @@ class Router
             if (!preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
                 continue;
             }
+            $matchedText = array_shift($matches);
 
             $params = array();
 
             if (preg_match_all("/:([\w-%]+)/", $routes->getUrl(), $argument_keys)) {
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
+
+                // check arguments number
+                if(count($argument_keys) != count($matches)) {
+                    continue;
+                }
 
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {

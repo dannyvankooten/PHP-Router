@@ -17,9 +17,7 @@
  */
 namespace PHPRouter\Test;
 
-error_reporting(-1);
-ini_set('display_errors', 1);
-require __DIR__ . "/../Fixtures/SomeController.php";
+require __DIR__ . '/../Fixtures/SomeController.php';
 
 use PHPRouter\Route;
 use PHPRouter\Router;

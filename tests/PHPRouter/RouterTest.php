@@ -17,15 +17,25 @@
  */
 namespace PHPRouter\Test;
 
-require_once "SomeController.php";
+error_reporting(-1);
+ini_set('display_errors', 1);
+require __DIR__ . "/../Fixtures/SomeController.php";
 
-use PHPRouter\RouteCollection;
-use PHPRouter\Router;
 use PHPRouter\Route;
+use PHPRouter\Router;
+use PHPRouter\RouteCollection;
 use PHPUnit_Framework_TestCase;
 
 class RouterTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @dataProvider matcherProvider
+     */
+    public function testMatch($router, $path, $expected)
+    {
+        $this->assertEquals($expected, (bool) $router->match($path));
+    }
+
     private function getRouter()
     {
         $collection = new RouteCollection();
@@ -41,6 +51,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             '_controller' => 'PHPRouter\Test\SomeController::indexAction',
             'methods' => 'GET'
         )));
+
         return new Router($collection);
     }
 
@@ -80,13 +91,5 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function matcherProvider()
     {
         return array_merge($this->matcherProvider1(), $this->matcherProvider2());
-    }
-
-    /**
-     * @dataProvider matcherProvider
-     */
-    public function testMatch($router, $path, $expected)
-    {
-        $this->assertEquals($expected, !!$router->match($path));
     }
 }

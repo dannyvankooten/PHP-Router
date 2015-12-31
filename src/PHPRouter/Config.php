@@ -17,6 +17,7 @@
  */
 namespace PHPRouter;
 
+use InvalidArgumentException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -36,16 +37,16 @@ final class Config
 
     /**
      * @param string $yamlFile file location.
+     * @throws InvalidArgumentException
      *
      * @return mixed[]
      */
     public static function loadFromFile($yamlFile)
     {
-        try {
-            $value = Yaml::parse(file_get_contents($yamlFile));
-        } catch (\Exception $e) {
-            echo 'Message %s'.$e->getMessage();
+        if (! is_file($yamlFile)) {
+            throw new InvalidArgumentException(sprintf('The file %s not exists!', $yamlFile));
         }
-        return $value;
+
+        return Yaml::parse(file_get_contents($yamlFile));
     }
 }

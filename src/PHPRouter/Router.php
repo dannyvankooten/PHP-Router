@@ -52,8 +52,9 @@ class Router
         $this->routes = $collection;
 
         foreach ($this->routes->all() as $route) {
-            if (!is_null($route->getName())) {
-                $this->namedRoutes[$route->getName()] = $route;
+            $name = $route->getName();
+            if (null !== $name) {
+                $this->namedRoutes[$name] = $route;
             }
         }
     }

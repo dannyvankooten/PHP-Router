@@ -19,12 +19,8 @@ A simple Rails inspired PHP router class.
 
 # Easy to install with **composer**
 
-```javascript
-{
-    "require": {
-        "dannyvankooten/php-router": "dev-master"
-    }
-}
+```sh
+$ composer require dannyvankooten/php-router
 ```
 
 ## Usage

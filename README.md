@@ -121,9 +121,9 @@ $router->matchCurrentRequest();
 ```
 
 ## More information
-Have a look at the example.php file or read trough the class' documentation for a better understanding on how to use this class.
 
 If you like PHP Router you might also like [AltoRouter](//github.com/dannyvankooten/AltoRouter).
 
 ## License
+
 MIT Licensed, http://www.opensource.org/licenses/MIT

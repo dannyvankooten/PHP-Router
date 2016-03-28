@@ -73,11 +73,11 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->url = $resource;
-        $this->config = $config;
-        $this->methods = isset($config['methods']) ? (array)$config['methods'] : array();
-        $this->target = isset($config['target']) ? $config['target'] : null;
-        $this->name = isset($config['name']) ? $config['name'] : null;
+        $this->url     = $resource;
+        $this->config  = $config;
+        $this->methods = isset($config['methods']) ? (array) $config['methods'] : [];
+        $this->target  = isset($config['target']) ? $config['target'] : null;
+        $this->name    = isset($config['name']) ? $config['name'] : null;
     }
 
     public function getUrl()

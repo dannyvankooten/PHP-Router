@@ -129,11 +129,8 @@ class Route
 
     public function setFilters(array $filters, $parametersByName = false)
     {
-        $this->filters = $filters;
-
-        if ($parametersByName) {
-            $this->parametersByName = true;
-        }
+        $this->filters          = $filters;
+        $this->parametersByName = $parametersByName;
     }
 
     public function getRegex()

@@ -75,7 +75,7 @@ class Route
     {
         $this->url     = $resource;
         $this->config  = $config;
-        $this->methods = isset($config['methods']) ? (array) $config['methods'] : [];
+        $this->methods = isset($config['methods']) ? (array) $config['methods'] : array();
         $this->target  = isset($config['target']) ? $config['target'] : null;
         $this->name    = isset($config['name']) ? $config['name'] : null;
     }
@@ -140,7 +140,7 @@ class Route
 
     private function substituteFilter($matches)
     {
-        if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
+        if (isset($matches[1], $this->filters[$matches[1]])) {
             return $this->filters[$matches[1]];
         }
 

@@ -135,7 +135,7 @@ class Route
 
     public function getRegex()
     {
-        return preg_replace_callback("/(:\w+)/", array(&$this, 'substituteFilter'), $this->url);
+        return preg_replace_callback('/(:\w+)/', array(&$this, 'substituteFilter'), $this->url);
     }
 
     private function substituteFilter($matches)
@@ -144,7 +144,7 @@ class Route
             return $this->filters[$matches[1]];
         }
 
-        return "([\w-%]+)";
+        return '([\w-%]+)';
     }
 
     public function getParameters()

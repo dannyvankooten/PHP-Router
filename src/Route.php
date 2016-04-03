@@ -41,7 +41,7 @@ class Route
      * The name of this route, used for reversed routing
      * @var string
      */
-    private $name = null;
+    private $name;
 
     /**
      * Custom parameter filters for this route

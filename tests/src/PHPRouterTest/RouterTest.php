@@ -34,13 +34,13 @@ class RouterTest extends PHPUnit_Framework_TestCase
      */
     public function testMatch($router, $path, $expected)
     {
-        $this->assertEquals($expected, (bool)$router->match($path));
+        self::assertEquals($expected, (bool)$router->match($path));
     }
 
     public function testMatchWrongMethod()
     {
         $router = $this->getRouter();
-        $this->assertFalse($router->match('/users', 'POST'));
+        self::assertFalse($router->match('/users', 'POST'));
     }
 
     public function testBasePathConfigIsSettedProperly()
@@ -48,7 +48,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $router = new Router(new RouteCollection);
         $router->setBasePath('/webroot/');
 
-        $this->assertAttributeEquals('/webroot', 'basePath', $router);
+        self::assertAttributeEquals('/webroot', 'basePath', $router);
     }
 
     public function testMatchRouterUsingBasePath()
@@ -64,7 +64,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
         foreach ($this->serverProvider() as $server) {
             $_SERVER = $server;
-            $this->assertTrue((bool)$router->matchCurrentRequest());
+            self::assertTrue((bool)$router->matchCurrentRequest());
         }
     }
 
@@ -98,7 +98,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $collection->attachRoute($route);
 
         $router = new Router($collection);
-        $this->assertEquals(
+        self::assertEquals(
             array(array('page_id' => 'MySuperPage')),
             $router->match('/page/MySuperPage')->getParameters()
         );
@@ -118,17 +118,17 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $collection->attachRoute($route);
 
         $router = new Router($collection);
-        $this->assertEquals(
+        self::assertEquals(
             array(array('filename' => 'someJsFile')),
             $router->match('/js/someJsFile.js')->getParameters()
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             array(array('filename' => 'someJsFile.min')),
             $router->match('/js/someJsFile.min.js')->getParameters()
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             array(array('filename' => 'someJsFile.min.js')),
             $router->match('/js/someJsFile.min.js.js')->getParameters()
         );
@@ -138,14 +138,14 @@ class RouterTest extends PHPUnit_Framework_TestCase
     {
         $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
         $router = Router::parseConfig($config);
-        $this->assertAttributeEquals($config['base_path'], 'basePath', $router);
+        self::assertAttributeEquals($config['base_path'], 'basePath', $router);
     }
 
     public function testGenerate()
     {
         $router = $this->getRouter();
-        $this->assertSame('/users/', $router->generate('users'));
-        $this->assertSame('/user/123', $router->generate('user', array('id' => 123)));
+        self::assertSame('/users/', $router->generate('users'));
+        self::assertSame('/user/123', $router->generate('user', array('id' => 123)));
     }
 
     /**
@@ -154,7 +154,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
     public function testGenerateNotExistent()
     {
         $router = $this->getRouter();
-        $this->assertSame('/notExists/', $router->generate('notThisRoute'));
+        self::assertSame('/notExists/', $router->generate('notThisRoute'));
     }
 
     /**

@@ -112,8 +112,9 @@ class Router
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }
 
-            // check if request _url matches route regex. if not, return false.
-            if (!preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
+            $route = rtrim($routes->getRegex(), '/');
+            $pattern = "@^{$this->basePath}{$route}/?$@i";
+            if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
             $matchedText = array_shift($matches);

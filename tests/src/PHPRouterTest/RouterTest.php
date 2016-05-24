@@ -194,6 +194,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/', true),
             array($router, '/aaa', false),
             array($router, '/users', true),
+            array($router, '/usersssss', false),
             array($router, '/user/1', true),
             array($router, '/user/%E3%81%82', true),
         );
@@ -217,6 +218,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
             array($router, '/api', true),
             array($router, '/api/aaa', false),
             array($router, '/api/users', true),
+            array($router, '/api/userssss', false),
             array($router, '/api/user/1', true),
             array($router, '/api/user/%E3%81%82', true),
         );

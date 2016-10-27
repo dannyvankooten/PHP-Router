@@ -41,7 +41,7 @@ class Route
      * The name of this route, used for reversed routing
      * @var string
      */
-    private $name = null;
+    private $name;
 
     /**
      * Custom parameter filters for this route
@@ -73,11 +73,11 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->url = $resource;
-        $this->config = $config;
-        $this->methods = isset($config['methods']) ? (array)$config['methods'] : array();
-        $this->target = isset($config['target']) ? $config['target'] : null;
-        $this->name = isset($config['name']) ? $config['name'] : null;
+        $this->url     = $resource;
+        $this->config  = $config;
+        $this->methods = isset($config['methods']) ? (array) $config['methods'] : array();
+        $this->target  = isset($config['target']) ? $config['target'] : null;
+        $this->name    = isset($config['name']) ? $config['name'] : null;
     }
 
     public function getUrl()
@@ -129,25 +129,22 @@ class Route
 
     public function setFilters(array $filters, $parametersByName = false)
     {
-        $this->filters = $filters;
-
-        if ($parametersByName) {
-            $this->parametersByName = true;
-        }
+        $this->filters          = $filters;
+        $this->parametersByName = $parametersByName;
     }
 
     public function getRegex()
     {
-        return preg_replace_callback("/(:\w+)/", array(&$this, 'substituteFilter'), $this->url);
+        return preg_replace_callback('/(:\w+)/', array(&$this, 'substituteFilter'), $this->url);
     }
 
     private function substituteFilter($matches)
     {
-        if (isset($matches[1]) && isset($this->filters[$matches[1]])) {
+        if (isset($matches[1], $this->filters[$matches[1]])) {
             return $this->filters[$matches[1]];
         }
 
-        return "([\w-%]+)";
+        return '([\w-%]+)';
     }
 
     public function getParameters()

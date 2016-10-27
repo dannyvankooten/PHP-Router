@@ -52,8 +52,9 @@ class Router
         $this->routes = $collection;
 
         foreach ($this->routes->all() as $route) {
-            if (!is_null($route->getName())) {
-                $this->namedRoutes[$route->getName()] = $route;
+            $name = $route->getName();
+            if (null !== $name) {
+                $this->namedRoutes[$name] = $route;
             }
         }
     }
@@ -111,10 +112,12 @@ class Router
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }
 
-            // check if request _url matches route regex. if not, return false.
-            if (!preg_match("@^" . $this->basePath . $routes->getRegex() . "*$@i", $requestUrl, $matches)) {
+            $route = rtrim($routes->getRegex(), '/');
+            $pattern = "@^{$this->basePath}{$route}/?$@i";
+            if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
+            $matchedText = array_shift($matches);
 
             $params = array();
 
@@ -122,10 +125,15 @@ class Router
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
+                // check arguments number
+                if(count($argument_keys) != count($matches)) {
+                    continue;
+                }
+
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {
-                    if (isset($matches[$key + 1])) {
-                        $params[$name] = $matches[$key + 1];
+                    if (isset($matches[$key])) {
+                        $params[$name] = $matches[$key];
                     }
                 }
 

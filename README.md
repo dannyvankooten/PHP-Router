@@ -1,5 +1,10 @@
 # PHP Router class
 
+[![Latest Stable Version](https://poser.pugx.org/dannyvankooten/php-router/v/stable)](https://packagist.org/packages/dannyvankooten/php-router) 
+[![Total Downloads](https://poser.pugx.org/dannyvankooten/php-router/downloads)](https://packagist.org/packages/dannyvankooten/php-router) 
+[![Latest Unstable Version](https://poser.pugx.org/dannyvankooten/php-router/v/unstable)](https://packagist.org/packages/dannyvankooten/php-router) 
+[![License](https://poser.pugx.org/dannyvankooten/php-router/license)](https://packagist.org/packages/dannyvankooten/php-router)
+
 A simple Rails inspired PHP router class.
 
 * Usage of different HTTP Methods
@@ -14,12 +19,8 @@ A simple Rails inspired PHP router class.
 
 # Easy to install with **composer**
 
-```javascript
-{
-    "require": {
-        "dannyvankooten/php-router": "dev-master"
-    }
-}
+```sh
+$ composer require dannyvankooten/php-router
 ```
 
 ## Usage
@@ -120,9 +121,9 @@ $router->matchCurrentRequest();
 ```
 
 ## More information
-Have a look at the example.php file or read trough the class' documentation for a better understanding on how to use this class.
 
 If you like PHP Router you might also like [AltoRouter](//github.com/dannyvankooten/AltoRouter).
 
 ## License
+
 MIT Licensed, http://www.opensource.org/licenses/MIT

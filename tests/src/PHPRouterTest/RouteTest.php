@@ -88,4 +88,9 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $this->routeWithParameters->setName('pageroute');
         $this->assertEquals('pageroute', $this->routeWithParameters->getName());
     }
+
+    public function testGetAction()
+    {
+        $this->assertEquals('page', $this->routeWithParameters->getAction());
+    }
 }

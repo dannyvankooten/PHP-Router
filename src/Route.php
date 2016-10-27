@@ -160,16 +160,23 @@ class Route
     public function dispatch()
     {
         $action = explode('::', $this->config['_controller']);
-        $instance = new $action[0];
 
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
-        if(empty($action[1]) || trim($action[1]) == '') {
-          $action[1] = '__construct';
-        }
+        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
 
-        call_user_func_array(array($instance, $action[1]), $this->parameters);
+        if (!is_null($this->action)) {
+            $instance = new $action[0];
+            call_user_func_array(array($instance, $this->action), $this->parameters);
+        } else {
+            $instance = new $action[0]($this->parameters);
+        }
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }

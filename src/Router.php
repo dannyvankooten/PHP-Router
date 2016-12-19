@@ -62,6 +62,7 @@ class Router
     {
         $this->routes = $collection;
 
+        // @todo remove this heavy operation from construct
         foreach ($this->routes->all() as $route) {
             $name = $route->getName();
             if (null !== $name) {

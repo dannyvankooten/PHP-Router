@@ -41,56 +41,56 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
     public function testGetUrl()
     {
-        $this->assertEquals('/page/:page_id', $this->routeWithParameters->getUrl());
+        self::assertEquals('/page/:page_id', $this->routeWithParameters->getUrl());
     }
 
     public function testSetUrl()
     {
         $this->routeWithParameters->setUrl('/pages/:page_name/');
-        $this->assertEquals('/pages/:page_name/', $this->routeWithParameters->getUrl());
+        self::assertEquals('/pages/:page_name/', $this->routeWithParameters->getUrl());
 
         $this->routeWithParameters->setUrl('/pages/:page_name');
-        $this->assertEquals('/pages/:page_name/', $this->routeWithParameters->getUrl());
+        self::assertEquals('/pages/:page_name/', $this->routeWithParameters->getUrl());
     }
 
     public function testGetMethods()
     {
-        $this->assertEquals(array('GET'), $this->routeWithParameters->getMethods());
+        self::assertEquals(array('GET'), $this->routeWithParameters->getMethods());
     }
 
     public function testSetMethods()
     {
         $this->routeWithParameters->setMethods(array('POST'));
-        $this->assertEquals(array('POST'), $this->routeWithParameters->getMethods());
+        self::assertEquals(array('POST'), $this->routeWithParameters->getMethods());
 
         $this->routeWithParameters->setMethods(array('GET', 'POST', 'PUT', 'DELETE'));
-        $this->assertEquals(array('GET', 'POST', 'PUT', 'DELETE'), $this->routeWithParameters->getMethods());
+        self::assertEquals(array('GET', 'POST', 'PUT', 'DELETE'), $this->routeWithParameters->getMethods());
     }
 
     public function testGetTarget()
     {
-        $this->assertEquals('thisIsAString', $this->routeWithParameters->getTarget());
+        self::assertEquals('thisIsAString', $this->routeWithParameters->getTarget());
     }
 
     public function testSetTarget()
     {
         $this->routeWithParameters->setTarget('ThisIsAnotherString');
-        $this->assertEquals('ThisIsAnotherString', $this->routeWithParameters->getTarget());
+        self::assertEquals('ThisIsAnotherString', $this->routeWithParameters->getTarget());
     }
 
     public function testGetName()
     {
-        $this->assertEquals('page', $this->routeWithParameters->getName());
+        self::assertEquals('page', $this->routeWithParameters->getName());
     }
 
     public function testSetName()
     {
         $this->routeWithParameters->setName('pageroute');
-        $this->assertEquals('pageroute', $this->routeWithParameters->getName());
+        self::assertEquals('pageroute', $this->routeWithParameters->getName());
     }
 
     public function testGetAction()
     {
-        $this->assertEquals('page', $this->routeWithParameters->getAction());
+        self::assertEquals('page', $this->routeWithParameters->getAction());
     }
 }

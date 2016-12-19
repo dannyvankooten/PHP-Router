@@ -18,10 +18,14 @@
 namespace PHPRouterTest\Test;
 
 use PHPRouter\Route;
+use PHPRouter\Test\SomeController;
 use PHPUnit_Framework_TestCase;
 
 class RouteTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Route
+     */
     private $routeWithParameters;
 
     protected function setUp()
@@ -92,5 +96,25 @@ class RouteTest extends PHPUnit_Framework_TestCase
     public function testGetAction()
     {
         self::assertEquals('page', $this->routeWithParameters->getAction());
+    }
+
+    public function testShouldGetInstanceFromContainerIfContainerIsProvided()
+    {
+        /* @var $container \PHPUnit_Framework_MockObject_MockObject|\Interop\Container\ContainerInterface */
+        $container = $this->getMock('Interop\Container\ContainerInterface');
+
+        $container->expects(self::once())
+            ->method('has')
+            ->with('PHPRouter\Test\SomeController')
+            ->willReturn(true);
+
+        $container->expects(self::once())
+            ->method('get')
+            ->with('PHPRouter\Test\SomeController')
+            ->willReturn(new SomeController());
+
+        $this->routeWithParameters->setContainer($container);
+
+        $this->routeWithParameters->dispatch();
     }
 }

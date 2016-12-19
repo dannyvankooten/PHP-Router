@@ -33,5 +33,10 @@
     "psr-4": {
       "PHPRouter\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/Fixtures/SomeController.php"
+    ]
   }
 }

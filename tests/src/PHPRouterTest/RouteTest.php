@@ -117,4 +117,20 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->routeWithParameters->dispatch();
     }
+
+    public function testShouldRaiseAnExceptionIfActionIsNull()
+    {
+        $route = new Route(
+            '/page/:page_id',
+            array(
+                '_controller' => 'PHPRouter\Test\SomeController::',
+                'methods' => array('GET'),
+                'target' => 'thisIsAString',
+                'name' => 'page'
+            )
+        );
+
+        $this->setExpectedException('\RuntimeException');
+        $route->dispatch();
+    }
 }

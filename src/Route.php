@@ -19,6 +19,7 @@ namespace PHPRouter;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Exception;
+use Interop\Container\ContainerInterface;
 
 class Route
 {
@@ -76,17 +77,34 @@ class Route
     private $config;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var string
+     */
+    private $action;
+
+    /**
      * @param       $resource
      * @param array $config
      */
     public function __construct($resource, array $config)
     {
+
+        // @todo get action and controller when create the object instance
         $this->url        = $resource;
         $this->config     = $config;
         $this->methods    = isset($config['methods']) ? (array) $config['methods'] : array();
         $this->target     = isset($config['target']) ? $config['target'] : null;
         $this->name       = isset($config['name']) ? $config['name'] : null;
         $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
+    }
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
     }
 
     public function getUrl()
@@ -187,13 +205,24 @@ class Route
 
     public function dispatch()
     {
-        $action = explode('::', $this->config['_controller']);
+        list($controller, $action) = explode('::', $this->config['_controller']);
+
+        $this->action = !$action && trim($action) !== '' ? $action : null;
 
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
+        if ($this->container && $this->container->has($controller)) {
+            $instance = $this->container->get($controller);
+            call_user_func_array(
+                // @todo action seems to be inconsistent
+                array($instance, $this->action),
+                $this->parameters
+            );
+
+            return;
+        }
 
         if (!is_null($this->action)) {
             $instance = new $action[0];

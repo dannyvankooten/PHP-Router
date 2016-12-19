@@ -18,7 +18,12 @@
 namespace PHPRouter;
 
 use Exception;
+<<<<<<< a396cb788c20ee74075ed070294b1564b5ef6aac
 use Fig\Http\Message\RequestMethodInterface;
+=======
+use Interop\Container\ContainerInterface;
+use PHPRouter\RouteCollection;
+>>>>>>> #44 — pass container to Router via constructor
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
@@ -45,9 +50,15 @@ class Router
     private $basePath = '';
 
     /**
-     * @param RouteCollection $collection
+     * @var ContainerInterface
      */
-    public function __construct(RouteCollection $collection)
+    private $container;
+
+    /**
+     * @param RouteCollection    $collection
+     * @param ContainerInterface $container
+     */
+    public function __construct(RouteCollection $collection, ContainerInterface $container)
     {
         $this->routes = $collection;
 
@@ -57,6 +68,8 @@ class Router
                 $this->namedRoutes[$name] = $route;
             }
         }
+
+        $this->container = $container;
     }
 
     /**

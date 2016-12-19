@@ -113,7 +113,7 @@ class Router
             }
 
             $route = rtrim($routes->getRegex(), '/');
-            $pattern = "@^{$this->basePath}{$route}/?$@i";
+            $pattern = '@^' . preg_quote($this->basePath) . preg_quote($route). '/?$@i';
             if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }

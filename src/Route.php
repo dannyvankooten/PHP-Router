@@ -87,15 +87,23 @@ class Route
     private $action;
 
     /**
+     * @var string
+     */
+    private $controller;
+
+    /**
      * @param       $resource
      * @param array $config
      */
     public function __construct($resource, array $config)
     {
+        $this->url    = $resource;
+        $this->config = $config;
 
-        // @todo get action and controller when create the object instance
-        $this->url        = $resource;
-        $this->config     = $config;
+        list($controller, $action) = explode('::', $this->config['_controller']);
+
+        $this->controller = $controller;
+        $this->action     = $action;
         $this->methods    = isset($config['methods']) ? (array) $config['methods'] : array();
         $this->target     = isset($config['target']) ? $config['target'] : null;
         $this->name       = isset($config['name']) ? $config['name'] : null;
@@ -205,35 +213,32 @@ class Route
 
     public function dispatch()
     {
-        list($controller, $action) = explode('::', $this->config['_controller']);
-
-        $this->action = !$action && trim($action) !== '' ? $action : null;
-
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
+        $controller = $this->controller;
+
         if ($this->container && $this->container->has($controller)) {
             $instance = $this->container->get($controller);
             call_user_func_array(
-                // @todo action seems to be inconsistent
-                array($instance, $this->action),
+                array($instance, $this->getAction()),
                 $this->parameters
             );
 
             return;
         }
 
-        if (!is_null($this->action)) {
-            $instance = new $action[0];
-            call_user_func_array(array($instance, $this->action), $this->parameters);
+        if (!is_null($this->getAction())) {
+            $instance = new $controller;
+            call_user_func_array(array($instance, $this->getAction()), $this->parameters);
         } else {
-            $instance = new $action[0]($this->parameters);
+            $instance = new $controller($this->parameters);
         }
     }
 
     public function getAction()
     {
-        return $this->action;
+        return '' !== trim($this->action) ? $this->action : null;
     }
 }

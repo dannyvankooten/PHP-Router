@@ -20,6 +20,7 @@ namespace PHPRouter;
 use Fig\Http\Message\RequestMethodInterface;
 use Exception;
 use Interop\Container\ContainerInterface;
+use SebastianBergmann\GlobalState\RuntimeException;
 
 class Route
 {
@@ -213,6 +214,12 @@ class Route
 
     public function dispatch()
     {
+        if (null === $this->getAction()) {
+            throw new RuntimeException(
+                sprintf('Could not find an action to controller "%s"', $this->controller)
+            );
+        }
+
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
@@ -221,6 +228,11 @@ class Route
 
         if ($this->container && $this->container->has($controller)) {
             $instance = $this->container->get($controller);
+        } else {
+            $instance = new $controller;
+        }
+
+        if (method_exists($this, $this->getAction())){
             call_user_func_array(
                 array($instance, $this->getAction()),
                 $this->parameters
@@ -229,12 +241,7 @@ class Route
             return;
         }
 
-        if (!is_null($this->getAction())) {
-            $instance = new $controller;
-            call_user_func_array(array($instance, $this->getAction()), $this->parameters);
-        } else {
-            $instance = new $controller($this->parameters);
-        }
+        new $controller($this->parameters);
     }
 
     public function getAction()

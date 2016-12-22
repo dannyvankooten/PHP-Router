@@ -27,6 +27,7 @@ before_script:
 
 script:
     - vendor/bin/phpunit -c phpunit.xml.dist
+    - vendor/bin/docheader check src/ tests/
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar

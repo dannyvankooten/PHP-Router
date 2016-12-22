@@ -23,6 +23,7 @@
     "php": "^5.3.0|^7.0"
   },
   "require-dev": {
+    "malukenho/docheader": "^0.1.5",
     "phpunit/phpunit": "4.8.*",
     "squizlabs/php_codesniffer": "2.*"
   },

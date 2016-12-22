@@ -136,7 +136,6 @@ class Router
                         $params[$name] = $matches[$key];
                     }
                 }
-
             }
 
             $routes->setParameters($params);

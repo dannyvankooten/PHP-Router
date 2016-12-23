@@ -121,7 +121,7 @@ class Router
 
             $params = array();
 
-            if (preg_match_all("/:([\w-%]+)/", $routes->getUrl(), $argument_keys)) {
+            if (preg_match_all('/:([\w-%]+)/', $routes->getUrl(), $argument_keys)) {
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
@@ -170,14 +170,14 @@ class Router
         $url = $route->getUrl();
 
         // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
+        if ($params && preg_match_all('/:(\w+)/', $url, $param_keys)) {
             // grab array with matches
             $param_keys = $param_keys[1];
 
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $key) {
                 if (isset($params[$key])) {
-                    $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+                    $url = preg_replace('/:(\w+)/', $params[$key], $url, 1);
                 }
             }
         }

@@ -17,6 +17,8 @@
  */
 namespace PHPRouter;
 
+use Fig\Http\Message\RequestMethodInterface;
+
 class Route
 {
     /**
@@ -29,7 +31,12 @@ class Route
      * Accepted HTTP methods for this route.
      * @var string[]
      */
-    private $methods = array('GET', 'POST', 'PUT', 'DELETE');
+    private $methods = array(
+        RequestMethodInterface::METHOD_GET,
+        RequestMethodInterface::METHOD_POST,
+        RequestMethodInterface::METHOD_PUT,
+        RequestMethodInterface::METHOD_DELETE,
+    );
 
     /**
      * Target for this route, can be anything.

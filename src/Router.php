@@ -101,13 +101,14 @@ class Router
      */
     public function match($requestUrl, $requestMethod = 'GET')
     {
+        $currentDir = dirname($_SERVER['SCRIPT_NAME']);
+
         foreach ($this->routes->all() as $routes) {
             // compare server request method with route's allowed http methods
             if (! in_array($requestMethod, (array)$routes->getMethods(), true)) {
                 continue;
             }
 
-            $currentDir = dirname($_SERVER['SCRIPT_NAME']);
             if ('/' !== $currentDir) {
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }

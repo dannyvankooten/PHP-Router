@@ -18,7 +18,7 @@
 namespace PHPRouter;
 
 use Exception;
-use PHPRouter\RouteCollection;
+use Fig\Http\Message\RequestMethodInterface;
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
@@ -76,7 +76,7 @@ class Router
         $requestMethod = (
             isset($_POST['_method'])
             && ($_method = strtoupper($_POST['_method']))
-            && in_array($_method, array('PUT', 'DELETE'))
+            && in_array($_method, array(RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE), true)
         ) ? $_method : $_SERVER['REQUEST_METHOD'];
 
         $requestUrl = $_SERVER['REQUEST_URI'];
@@ -99,7 +99,7 @@ class Router
      *
      * @return bool|Route
      */
-    public function match($requestUrl, $requestMethod = 'GET')
+    public function match($requestUrl, $requestMethod = RequestMethodInterface::METHOD_GET)
     {
         foreach ($this->routes->all() as $routes) {
             // compare server request method with route's allowed http methods

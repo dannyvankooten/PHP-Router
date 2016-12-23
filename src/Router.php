@@ -103,12 +103,12 @@ class Router
     {
         foreach ($this->routes->all() as $routes) {
             // compare server request method with route's allowed http methods
-            if (!in_array($requestMethod, (array)$routes->getMethods())) {
+            if (! in_array($requestMethod, (array)$routes->getMethods(), true)) {
                 continue;
             }
 
             $currentDir = dirname($_SERVER['SCRIPT_NAME']);
-            if ($currentDir != '/') {
+            if ('/' !== $currentDir) {
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }
 
@@ -126,7 +126,7 @@ class Router
                 $argument_keys = $argument_keys[1];
 
                 // check arguments number
-                if(count($argument_keys) != count($matches)) {
+                if(count($argument_keys) !== count($matches)) {
                     continue;
                 }
 

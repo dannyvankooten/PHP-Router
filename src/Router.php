@@ -118,7 +118,6 @@ class Router
             if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
-            $matchedText = array_shift($matches);
 
             $params = array();
 

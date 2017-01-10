@@ -18,7 +18,7 @@
 namespace PHPRouter;
 
 use Exception;
-use PHPRouter\RouteCollection;
+use Fig\Http\Message\RequestMethodInterface;
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
@@ -76,7 +76,7 @@ class Router
         $requestMethod = (
             isset($_POST['_method'])
             && ($_method = strtoupper($_POST['_method']))
-            && in_array($_method, array('PUT', 'DELETE'))
+            && in_array($_method, array(RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE), true)
         ) ? $_method : $_SERVER['REQUEST_METHOD'];
 
         $requestUrl = $_SERVER['REQUEST_URI'];
@@ -99,34 +99,35 @@ class Router
      *
      * @return bool|Route
      */
-    public function match($requestUrl, $requestMethod = 'GET')
+    public function match($requestUrl, $requestMethod = RequestMethodInterface::METHOD_GET)
     {
+        $currentDir = dirname($_SERVER['SCRIPT_NAME']);
+
         foreach ($this->routes->all() as $routes) {
             // compare server request method with route's allowed http methods
-            if (!in_array($requestMethod, (array)$routes->getMethods())) {
+            if (! in_array($requestMethod, (array)$routes->getMethods(), true)) {
                 continue;
             }
 
-            $currentDir = dirname($_SERVER['SCRIPT_NAME']);
-            if ($currentDir != '/') {
+            if ('/' !== $currentDir) {
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }
 
             $route = rtrim($routes->getRegex(), '/');
-            $pattern = "@^{$this->basePath}{$route}/?$@i";
+            $pattern = '@^' . preg_quote($this->basePath) . preg_quote($route). '/?$@i';
             if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
-            $matchedText = array_shift($matches);
 
             $params = array();
 
-            if (preg_match_all("/:([\w-%]+)/", $routes->getUrl(), $argument_keys)) {
+            if (preg_match_all('/:([\w-%]+)/', $routes->getUrl(), $argument_keys)) {
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
                 // check arguments number
-                if (count($argument_keys) != count($matches)) {
+
+                if(count($argument_keys) !== count($matches)) {
                     continue;
                 }
 
@@ -169,14 +170,14 @@ class Router
         $url = $route->getUrl();
 
         // replace route url with given parameters
-        if ($params && preg_match_all("/:(\w+)/", $url, $param_keys)) {
+        if ($params && preg_match_all('/:(\w+)/', $url, $param_keys)) {
             // grab array with matches
             $param_keys = $param_keys[1];
 
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $key) {
                 if (isset($params[$key])) {
-                    $url = preg_replace("/:(\w+)/", $params[$key], $url, 1);
+                    $url = preg_replace('/:(\w+)/', $params[$key], $url, 1);
                 }
             }
         }

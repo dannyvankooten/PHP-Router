@@ -85,6 +85,7 @@ class Route
         $this->methods = isset($config['methods']) ? (array) $config['methods'] : array();
         $this->target  = isset($config['target']) ? $config['target'] : null;
         $this->name    = isset($config['name']) ? $config['name'] : null;
+        $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
     }
 
     public function getUrl()
@@ -161,7 +162,7 @@ class Route
 
     public function setParameters(array $parameters)
     {
-        $this->parameters = $parameters;
+        $this->parameters = array_merge($this->parameters, $parameters);
     }
 
     public function dispatch()

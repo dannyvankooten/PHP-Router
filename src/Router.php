@@ -127,7 +127,7 @@ class Router
 
                 // check arguments number
 
-                if(count($argument_keys) !== count($matches)) {
+                if(count($argument_keys) !== (count($matches) -1)) {
                     continue;
                 }
 

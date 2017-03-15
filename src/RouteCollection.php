@@ -25,6 +25,19 @@ namespace PHPRouter;
 class RouteCollection extends \SplObjectStorage
 {
     /**
+     * Attach all routes to the collection at once
+     *
+     * @param array $routes
+     */
+    public function __construct(array $routes)
+    {
+        foreach($routes as $route)
+        {
+            $this->attachRoute($route);
+        }
+    }
+
+    /**
      * Attach a Route to the collection.
      *
      * @param Route $attachObject

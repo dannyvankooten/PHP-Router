@@ -18,6 +18,7 @@
 namespace PHPRouter;
 
 use Fig\Http\Message\RequestMethodInterface;
+use Exception;
 
 class Route
 {
@@ -80,11 +81,11 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->url     = $resource;
-        $this->config  = $config;
-        $this->methods = isset($config['methods']) ? (array) $config['methods'] : array();
-        $this->target  = isset($config['target']) ? $config['target'] : null;
-        $this->name    = isset($config['name']) ? $config['name'] : null;
+        $this->url        = $resource;
+        $this->config     = $config;
+        $this->methods    = isset($config['methods']) ? (array) $config['methods'] : array();
+        $this->target     = isset($config['target']) ? $config['target'] : null;
+        $this->name       = isset($config['name']) ? $config['name'] : null;
         $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
     }
 
@@ -139,6 +140,7 @@ class Route
     {
         $this->filters          = $filters;
         $this->parametersByName = $parametersByName;
+        $this->validateFilters();
     }
 
     public function getRegex()
@@ -153,6 +155,24 @@ class Route
         }
 
         return '([\w-%]+)';
+    }
+
+    /**
+     * Validate filters to avoid wrong match while filters are not correctly defined
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @param array $filters Filters to validate
+     * @throw Exception Invalid filter throw exception
+     * @return null
+     */
+    private function validateFilters()
+    {
+        foreach($this->filters as $key => $reg) {
+            if(!preg_match('~^:([[a-z]])$~i', $key)) {
+                throw new Exception('Invalid filter name `'.$key.'` it should contains only letters and start with `:`');
+            }
+        }
     }
 
     public function getParameters()

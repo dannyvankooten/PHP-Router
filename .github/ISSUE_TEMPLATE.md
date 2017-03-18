@@ -1,7 +1,6 @@
-Please include the following information when submitting a bug report/issue:
-
-* PHPRouter version
-* PHP version (e.g. PHP 5.6, HHVM 3):
+<!---Please include the following information when submitting a bug report/issue-->
+* PHPRouter version:
+* PHP version<!--- (e.g. PHP 5.6, HHVM 3)-->:
 * Exact steps to cause this issue
     1. First I did this...
     2. Then...

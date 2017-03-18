@@ -40,6 +40,12 @@ class Route
     );
 
     /**
+    * Action
+    * @var string
+    */
+    private $action;
+
+    /**
      * Target for this route, can be anything.
      * @var mixed
      */

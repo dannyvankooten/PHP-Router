@@ -18,23 +18,21 @@
 namespace PHPRouterTest\Test;
 
 use PHPRouter\Config;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Jefersson Nathan <malukenho@phpse.net>
  * @package PHPRouter\Test
  */
-class ConfigTest extends PHPUnit_Framework_TestCase
+class ConfigTest extends TestCase
 {
     /**
      * @throws \InvalidArgumentException
      */
     public function testConfigThrowsErrorWithWrongParameter()
     {
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            'The file fileNotExisting not exists!'
-        );
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The file fileNotExisting not exists!');
         Config::loadFromFile('fileNotExisting');
     }
 

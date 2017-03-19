@@ -94,7 +94,7 @@ class RouterTest extends TestCase
                 'methods' => 'GET'
             )
         );
-        $route->setFilters(array('page_id' => '([a-zA-Z]+)'), true);
+        $route->setFilters(array(':page_id' => '([a-zA-Z]+)'), true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);

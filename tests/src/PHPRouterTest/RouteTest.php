@@ -107,4 +107,10 @@ class RouteTest extends TestCase
         self::assertEquals('page', $this->routeWithParameters->getAction());
         self::assertEquals('__construct', $this->routeWithoutAction->getAction());
     }
+
+    public function testGetController()
+    {
+        self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithParameters->getController());
+        self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithoutAction->getController());
+    }
 }

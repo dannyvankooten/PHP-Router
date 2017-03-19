@@ -18,11 +18,12 @@
 namespace PHPRouterTest\Test;
 
 use PHPRouter\Route;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RouteTest extends PHPUnit_Framework_TestCase
+class RouteTest extends TestCase
 {
     private $routeWithParameters;
+    private $routeWithoutAction;
 
     protected function setUp()
     {
@@ -30,6 +31,18 @@ class RouteTest extends PHPUnit_Framework_TestCase
             '/page/:page_id',
             array(
                 '_controller' => 'PHPRouter\Test\SomeController::page',
+                'methods' => array(
+                    'GET'
+                ),
+                'target' => 'thisIsAString',
+                'name' => 'page'
+            )
+        );
+
+        $this->routeWithoutAction = new Route(
+            '/page/:page_id',
+            array(
+                '_controller' => 'PHPRouter\Test\SomeController',
                 'methods' => array(
                     'GET'
                 ),
@@ -92,5 +105,6 @@ class RouteTest extends PHPUnit_Framework_TestCase
     public function testGetAction()
     {
         self::assertEquals('page', $this->routeWithParameters->getAction());
+        self::assertEquals('__construct', $this->routeWithoutAction->getAction());
     }
 }

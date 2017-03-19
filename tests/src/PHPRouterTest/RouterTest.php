@@ -21,9 +21,9 @@ use PHPRouter\Config;
 use PHPRouter\Route;
 use PHPRouter\Router;
 use PHPRouter\RouteCollection;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class RouterTest extends PHPUnit_Framework_TestCase
+class RouterTest extends TestCase
 {
     /**
      * @dataProvider matcherProvider

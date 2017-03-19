@@ -40,7 +40,13 @@ class Route
     );
 
     /**
-    * Action
+     * Controller class
+     * @var string
+     */
+    private $controller;
+
+    /**
+    * Method called into the controller class
     * @var string
     */
     private $action;
@@ -193,24 +199,34 @@ class Route
 
     public function dispatch()
     {
-        $action = explode('::', $this->config['_controller']);
+        $action = $this->getAction();
+        $controller = $this->controller;
 
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
-
-        if (!is_null($this->action)) {
-            $instance = new $action[0];
-            call_user_func_array(array($instance, $this->action), $this->parameters);
+        if($action === '__construct') {
+            $instance = new $controller($this->parameters);
         } else {
-            $instance = new $action[0]($this->parameters);
+            $instance = new $controller;
+            call_user_func_array(array($instance, $action), $this->parameters);
         }
     }
 
     public function getAction()
     {
+        $action = explode('::', $this->config['_controller']);
+
+        $this->controller = $action[0];
+        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : '__construct';
+
         return $this->action;
+    }
+
+    public function getController()
+    {
+        $this->getAction();
+        return $this->controller;
     }
 }

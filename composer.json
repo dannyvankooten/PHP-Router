@@ -27,7 +27,7 @@
   },
   "require-dev": {
     "malukenho/docheader": "^0.1.5",
-    "phpunit/phpunit": "6.*",
+    "phpunit/phpunit": "^6.*",
     "squizlabs/php_codesniffer": "2.*"
   },
   "autoload": {

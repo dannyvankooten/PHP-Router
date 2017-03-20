@@ -29,6 +29,12 @@ class Route
     private $url;
 
     /**
+     * Separator used between class and action
+     * @const string
+     */
+    const ACTION_SEPARATOR = '::';
+
+    /**
      * Accepted HTTP methods for this route.
      * @var string[]
      */
@@ -175,7 +181,7 @@ class Route
      * @author Antoine Pous
      * @since 1.3.0
      * @param array $filters Filters to validate
-     * @throw Exception Invalid filter throw exception
+     * @throws Exception Invalid filter throw exception
      * @return null
      */
     private function validateFilters()
@@ -216,7 +222,7 @@ class Route
 
     public function getAction()
     {
-        $action = explode('::', $this->config['_controller']);
+        $action = explode(self::ACTION_SEPARATOR, $this->config['_controller']);
 
         $this->controller = $action[0];
         $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : '__construct';

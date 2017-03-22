@@ -18,7 +18,7 @@
 namespace PHPRouter;
 
 use Fig\Http\Message\RequestMethodInterface;
-use Exception;
+use InvalidArgumentException;
 
 class Route
 {
@@ -198,7 +198,7 @@ class Route
     {
         foreach ($this->filters as $key => $reg) {
             if (!preg_match('~^' . $this->filtersRegex . '$~', $key)) {
-                throw new Exception('Filter name `'.$key.'` does not match `' . $this->filtersRegex . '`');
+                throw new InvalidArgumentException('Filter name `'.$key.'` does not match `' . $this->filtersRegex . '`');
             }
         }
     }

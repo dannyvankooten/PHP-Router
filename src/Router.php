@@ -138,7 +138,10 @@ class Router
                 }
             }
 
-            $routes->setParameters($params);
+            if (!empty($params)) {
+                $routes->setParameters($params);
+            }
+
             $routes->dispatch();
 
             return $routes;

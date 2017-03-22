@@ -123,15 +123,36 @@ class RouterTest extends TestCase
             $router->match('/js/someJsFile.js')->getParameters()
         );
 
-        /*self::assertEquals(
+        self::assertEquals(
             array(array('filename' => 'someJsFile.min')),
             $router->match('/js/someJsFile.min.js')->getParameters()
         );
-/*
+
         self::assertEquals(
             array(array('filename' => 'someJsFile.min.js')),
             $router->match('/js/someJsFile.min.js.js')->getParameters()
-        );*/
+        );
+    }
+
+    public function testCustomParameters()
+    {
+        $collection = new RouteCollection();
+        $route = new Route(
+            '/test/params',
+            array(
+                '_controller' => 'PHPRouter\Test\SomeController::page',
+                'methods' => 'GET',
+            )
+        );
+        $route->setParameters(['myParam' => 'isOK']);
+        $collection->attachRoute($route);
+
+        $router = new Router($collection);
+
+        self::assertEquals(
+            ['myParam' => 'isOK'],
+            $router->match('/test/params')->getParameters()
+        );
     }
 
     public function testParseConfig()
@@ -160,7 +181,7 @@ class RouterTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testRouteWithWrongFiltername()
+    public function testWrongFiltername()
     {
         $collection = new RouteCollection();
         $route = new Route(
@@ -173,6 +194,7 @@ class RouterTest extends TestCase
         $route->setFiltersRegex(':([a-z]+):');
         $route->setFilters(array(':filename' => '([[:alnum:].]+).js'), true);
     }
+
     /**
      * @return Router
      */

@@ -88,6 +88,12 @@ class Route
     private $parameters = [];
 
     /**
+     * Array containing parameters passed through config
+     * @var array
+     */
+    private $customParams = [];
+
+    /**
      * Set named parameters to target method
      * @example [ [0] => [ ["link_id"] => "12312" ] ]
      * @var bool
@@ -105,12 +111,12 @@ class Route
      */
     public function __construct($resource, array $config)
     {
-        $this->url        = $resource;
-        $this->config     = $config;
-        $this->methods    = isset($config['methods']) ? (array) $config['methods'] : [];
-        $this->target     = isset($config['target']) ? $config['target'] : null;
-        $this->name       = isset($config['name']) ? $config['name'] : null;
-        $this->parameters = isset($config['parameters']) ? $config['parameters'] : [];
+        $this->url          = $resource;
+        $this->config       = $config;
+        $this->methods      = isset($config['methods']) ? (array) $config['methods'] : [];
+        $this->target       = isset($config['target']) ? $config['target'] : null;
+        $this->name         = isset($config['name']) ? $config['name'] : null;
+        $this->customParams = isset($config['parameters']) ? (array) $config['parameters'] : [];
 
         $action = explode(self::ACTION_SEPARATOR, $this->config['_controller']);
         $this->controller = $action[0];
@@ -198,7 +204,7 @@ class Route
     {
         foreach ($this->filters as $key => $reg) {
             if (!preg_match('~^' . $this->filtersRegex . '$~', $key)) {
-                throw new InvalidArgumentException('Filter name `'.$key.'` does not match `'.$this->filtersRegex.'`');
+                throw new InvalidArgumentException('Filter name `'.$key.'` does not match `^'.$this->filtersRegex.'$`');
             }
         }
     }
@@ -210,20 +216,23 @@ class Route
 
     public function setParameters(array $parameters)
     {
-        $this->parameters = array_merge($this->parameters, $parameters);
+        $this->parameters = $parameters;
     }
 
     public function dispatch()
     {
-        $action = $this->action;
         $controller = $this->controller;
+
+        // Merge parameters set from config and parameters given by filters
+        // filter overload custom params
+        $this->parameters = array_merge($this->customParams, $this->parameters);
 
         if ($this->parametersByName) {
             $this->parameters = [$this->parameters];
         }
 
         $instance = new $controller;
-        call_user_func_array([$instance, $action], $this->parameters);
+        call_user_func_array([$instance, $this->action], $this->parameters);
     }
 
     /**

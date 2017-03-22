@@ -122,7 +122,6 @@ class Router
             $params = [];
 
             if (preg_match_all('@' . $routes->getFiltersRegex() . '@', $routes->getUrl(), $argument_keys)) {
-
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 

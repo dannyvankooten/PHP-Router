@@ -198,7 +198,7 @@ class Route
     {
         foreach ($this->filters as $key => $reg) {
             if (!preg_match('~^' . $this->filtersRegex . '$~', $key)) {
-                throw new InvalidArgumentException('Filter name `'.$key.'` does not match `' . $this->filtersRegex . '`');
+                throw new InvalidArgumentException('Filter name `'.$key.'` does not match `'.$this->filtersRegex.'`');
             }
         }
     }

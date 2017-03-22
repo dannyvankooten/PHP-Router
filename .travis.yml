@@ -7,9 +7,6 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - 5.3
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
   - 7.1
@@ -20,16 +17,22 @@ matrix:
   fast_finish: true
   allow_failures:
     - php: hhvm-nightly
+  include:
+    - php: 5.6
+      env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
 
 before_script:
-    - composer self-update
-    - composer install
-    - mkdir -p build/logs
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-dist
 
 script:
-    - vendor/bin/phpunit -c phpunit.xml.dist
-    - vendor/bin/docheader check src/ tests/
+  - vendor/bin/phpunit -c phpunit.xml.dist
+  - vendor/bin/docheader check src/ tests/
+  - vendor/bin/phpcs --standard=psr2 src/
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
-    - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover.xml
+  - |
+    if [[ "$TRAVIS_PHP_VERSION" != 'hhvm' && "$TRAVIS_PHP_VERSION" != '7.0' ]]; then
+      wget https://scrutinizer-ci.com/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+    fi

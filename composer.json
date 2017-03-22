@@ -12,7 +12,7 @@
         {
             "name": "Danny van Kooten",
             "email": "dannyvankooten@gmail.com",
-            "homepage": "http://dannyvankooten.com/"
+            "homepage": "https://dannyvankooten.com/"
         },
         {
             "name": "Jefersson Nathan",
@@ -20,7 +20,7 @@
         }
     ],
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --coverage-text",
         "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
         "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
     },

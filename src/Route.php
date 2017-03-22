@@ -306,7 +306,7 @@ class Route
      * @param string The new regex used to match filters names
      * @return null
      */
-    public function setFiltersRegex(string $regex)
+    public function setFiltersRegex($regex)
     {
         $this->filtersRegex = $regex;
     }

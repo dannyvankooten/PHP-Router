@@ -30,13 +30,13 @@ class Router
      *
      * @var RouteCollection
      */
-    private $routes = array();
+    private $routes = [];
 
     /**
      * Array to store named routes in, used for reverse routing.
      * @var array
      */
-    private $namedRoutes = array();
+    private $namedRoutes = [];
 
     /**
      * The base REQUEST_URI. Gets prepended to all route url's.
@@ -76,7 +76,7 @@ class Router
         $requestMethod = (
             isset($_POST['_method'])
             && ($_method = strtoupper($_POST['_method']))
-            && in_array($_method, array(RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE), true)
+            && in_array($_method, [RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE], true)
         ) ? $_method : $_SERVER['REQUEST_METHOD'];
 
         $requestUrl = $_SERVER['REQUEST_URI'];
@@ -109,30 +109,32 @@ class Router
                 continue;
             }
 
-            if ('/' !== $currentDir) {
+            if (!in_array($currentDir, ['.', '/'])) {
                 $requestUrl = str_replace($currentDir, '', $requestUrl);
             }
 
             $route = rtrim($routes->getRegex(), '/');
-            $pattern = '@^' . preg_quote($this->basePath) . $route . '/?$@i';
+            $pattern = '@^' . $this->basePath . $route . '/?$@i';
             if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
 
-            $params = array();
+            $params = [];
 
-            if (preg_match_all('/:([\w-%]+)/', $routes->getUrl(), $argument_keys)) {
+            if (preg_match_all('@' . $routes->getFiltersRegex() . '@', $routes->getUrl(), $argument_keys)) {
+
+                var_dump($argument_keys);
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
                 // check arguments number
-
                 if (count($argument_keys) !== (count($matches) -1)) {
                     continue;
                 }
 
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {
+                    var_dump($argument_keys[$key]);
                     if (isset($matches[$key+1])) {
                         $params[$name] = $matches[$key+1];
                     }
@@ -158,7 +160,7 @@ class Router
      *
      * @return string The url to the route
      */
-    public function generate($routeName, array $params = array())
+    public function generate($routeName, array $params = [])
     {
         // Check if route exists
         if (!isset($this->namedRoutes[$routeName])) {
@@ -195,11 +197,11 @@ class Router
     {
         $collection = new RouteCollection();
         foreach ($config['routes'] as $name => $route) {
-            $collection->attachRoute(new Route($route[0], array(
+            $collection->attachRoute(new Route($route[0], [
                 '_controller' => str_replace('.', '::', $route[1]),
                 'methods' => $route[2],
                 'name' => $name
-            )));
+            ]));
         }
 
         $router = new Router($collection);

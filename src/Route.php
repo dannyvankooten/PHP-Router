@@ -38,12 +38,12 @@ class Route
      * Accepted HTTP methods for this route.
      * @var string[]
      */
-    private $methods = array(
+    private $methods = [
         RequestMethodInterface::METHOD_GET,
         RequestMethodInterface::METHOD_POST,
         RequestMethodInterface::METHOD_PUT,
         RequestMethodInterface::METHOD_DELETE,
-    );
+    ];
 
     /**
      * Controller class
@@ -73,13 +73,19 @@ class Route
      * Custom parameter filters for this route
      * @var array
      */
-    private $filters = array();
+    private $filters = [];
+
+    /**
+     * Regex used to validate filtername
+     * @var string
+     */
+    private $filtersRegex = ':([a-zA-Z_]+)';
 
     /**
      * Array containing parameters passed through request URL
      * @var array
      */
-    private $parameters = array();
+    private $parameters = [];
 
     /**
      * Set named parameters to target method
@@ -101,10 +107,14 @@ class Route
     {
         $this->url        = $resource;
         $this->config     = $config;
-        $this->methods    = isset($config['methods']) ? (array) $config['methods'] : array();
+        $this->methods    = isset($config['methods']) ? (array) $config['methods'] : [];
         $this->target     = isset($config['target']) ? $config['target'] : null;
         $this->name       = isset($config['name']) ? $config['name'] : null;
-        $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
+        $this->parameters = isset($config['parameters']) ? $config['parameters'] : [];
+
+        $action = explode(self::ACTION_SEPARATOR, $this->config['_controller']);
+        $this->controller = $action[0];
+        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : '__construct';
     }
 
     public function getUrl()
@@ -163,7 +173,7 @@ class Route
 
     public function getRegex()
     {
-        return preg_replace_callback('/(:\w+)/', array(&$this, 'substituteFilter'), $this->url);
+        return preg_replace_callback('/(:\w+)/', [&$this, 'substituteFilter'], $this->url);
     }
 
     private function substituteFilter($matches)
@@ -186,9 +196,9 @@ class Route
      */
     private function validateFilters()
     {
-        foreach($this->filters as $key => $reg) {
-            if(!preg_match('~^:([a-z_]+)$~i', $key)) {
-                throw new Exception('Invalid filter name `'.$key.'` it should contains only letters, underscore and start with `:`');
+        foreach ($this->filters as $key => $reg) {
+            if (!preg_match('~^' . $this->filtersRegex . '$~', $key)) {
+                throw new Exception('Filter name `'.$key.'` does not match `' . $this->filtersRegex . '`');
             }
         }
     }
@@ -205,34 +215,90 @@ class Route
 
     public function dispatch()
     {
-        $action = $this->getAction();
+        $action = $this->action;
         $controller = $this->controller;
 
         if ($this->parametersByName) {
-            $this->parameters = array($this->parameters);
+            $this->parameters = [$this->parameters];
         }
 
-        if($action === '__construct') {
-            $instance = new $controller($this->parameters);
-        } else {
-            $instance = new $controller;
-            call_user_func_array(array($instance, $action), $this->parameters);
-        }
+        $instance = new $controller;
+        call_user_func_array([$instance, $action], $this->parameters);
     }
 
+    /**
+     * Set action
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @param string $action Action to call
+     * @return null
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * Get Action
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @param string $action Action to call
+     * @return string|null The action
+     */
     public function getAction()
     {
-        $action = explode(self::ACTION_SEPARATOR, $this->config['_controller']);
-
-        $this->controller = $action[0];
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : '__construct';
-
         return $this->action;
     }
 
+    /**
+     * Set controller
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @param string $controller Controller to call
+     * @return null
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+    }
+
+    /**
+     * Get controller
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @return string|null The controller
+     */
     public function getController()
     {
-        $this->getAction();
         return $this->controller;
+    }
+
+    /**
+     * Get filter regular expression
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @return string The regex used to match filters names
+     */
+    public function getFiltersRegex()
+    {
+        return $this->filtersRegex;
+    }
+
+    /**
+     * Set filter regular expression
+     *
+     * @author Antoine Pous
+     * @since 1.3.0
+     * @param string The new regex used to match filters names
+     * @return null
+     */
+    public function setFiltersRegex(string $regex)
+    {
+        $this->filtersRegex = $regex;
     }
 }

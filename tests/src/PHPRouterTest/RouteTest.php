@@ -113,4 +113,27 @@ class RouteTest extends TestCase
         self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithParameters->getController());
         self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithoutAction->getController());
     }
+
+    public function testSetController()
+    {
+        $this->routeWithParameters->setController('PHPRouter\Test\anotherController');
+        self::assertEquals('PHPRouter\Test\anotherController', $this->routeWithParameters->getController());
+    }
+
+    public function testSetAction()
+    {
+        $this->routeWithParameters->setAction('anotherAction');
+        self::assertEquals('anotherAction', $this->routeWithParameters->getAction());
+    }
+
+    public function testGetFiltersRegex()
+    {
+        self::assertEquals(':([a-zA-Z_]+)', $this->routeWithParameters->getFiltersRegex());
+    }
+
+    public function testSetFiltersRegex()
+    {
+        $this->routeWithParameters->setFiltersRegex(':([a-zA-Z_]+):');
+        self::assertEquals(':([a-zA-Z_]+):', $this->routeWithParameters->getFiltersRegex());
+    }
 }

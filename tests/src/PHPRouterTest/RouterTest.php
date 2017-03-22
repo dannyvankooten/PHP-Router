@@ -108,13 +108,13 @@ class RouterTest extends TestCase
     {
         $collection = new RouteCollection();
         $route = new Route(
-            '/js/:filename.js',
+            '/js/:filename',
             array(
                 '_controller' => 'PHPRouter\Test\SomeController::dynamicFilterUrlMatch',
                 'methods' => 'GET',
             )
         );
-        $route->setFilters(array(':filename' => '([[:alnum:]\.]+)'), true);
+        $route->setFilters(array(':filename' => '([[:alnum:].]+).js'), true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);

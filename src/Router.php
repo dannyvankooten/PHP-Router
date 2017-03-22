@@ -123,7 +123,6 @@ class Router
 
             if (preg_match_all('@' . $routes->getFiltersRegex() . '@', $routes->getUrl(), $argument_keys)) {
 
-                var_dump($argument_keys);
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
@@ -134,7 +133,6 @@ class Router
 
                 // loop trough parameter names, store matching value in $params array
                 foreach ($argument_keys as $key => $name) {
-                    var_dump($argument_keys[$key]);
                     if (isset($matches[$key+1])) {
                         $params[$name] = $matches[$key+1];
                     }

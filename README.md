@@ -16,6 +16,7 @@ A simple Rails inspired PHP router class.
 
 - [Danny van Kooten](https://github.com/dannyvankooten)
 - [Jefersson Nathan](https://github.com/malukenho)
+- [Antoine Pous](https://github.com/antoine-pous)
 
 # Easy to install with **composer**
 

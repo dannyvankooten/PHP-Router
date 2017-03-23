@@ -17,6 +17,11 @@
         {
             "name": "Jefersson Nathan",
             "email": "malukenho@phpse.net"
+        },
+        {
+            "name": "Antoine Pous",
+            "email": "gecko@dvp.io",
+            "homepage": "https://dvp.io"
         }
     ],
     "scripts": {

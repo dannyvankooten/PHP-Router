@@ -38,26 +38,26 @@ class ConfigTest extends TestCase
 
     public function testConfigFileCanReadAndReturnDataOfAYamlFile()
     {
-        $expected = array(
+        $expected = [
             'base_path' => '/blog',
-            'routes'    => array(
-                'index' => array(
+            'routes'    => [
+                'index' => [
                     '/index',
                     'Controller.method',
                     'GET'
-                ),
-                'contact' => array(
+                ],
+                'contact' => [
                     '/contact',
                     'someClass.contactAction',
                     'GET',
-                ),
-                'about' => array(
+                ],
+                'about' => [
                     '/about',
                     'someClass.aboutAction',
                     'GET',
-                )
-            )
-        );
+                ]
+            ]
+        ];
         $result = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
 
         self::assertSame($expected, $result);

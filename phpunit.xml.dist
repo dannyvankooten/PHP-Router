@@ -11,7 +11,7 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="PHPRouter Test Suite">
-            <directory>tests/src/PHPRouterTest/</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
     <filter>

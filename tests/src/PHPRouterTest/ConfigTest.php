@@ -26,40 +26,57 @@ use PHPUnit\Framework\TestCase;
  */
 final class ConfigTest extends TestCase
 {
+
+    protected $expectedData = [
+        'base_path' => '/blog',
+        'routes' => [
+            'index' => [
+                'route' => '/index',
+                '_controller' => 'someController',
+                'methods' => [
+                    'GET'
+                ],
+            ],
+            'article' => [
+                'route' => '/article/:id/:title_slug',
+                '_controller' => 'PHPRouterFixtures\someControllerdynamic::FilterUrlMatch',
+                'methods' => [
+                    'GET'
+                ],
+                'filters' => [
+                    ':id' => '([\d]+)',
+                    ':title_slug' => '([[:alnum:]_-]+)'
+                ]
+            ],
+            'contact' => [
+                'route' => '/contact',
+                '_controller' => 'PHPRouterFixtures\someController::page',
+                'methods' => [
+                    'GET',
+                    'POST'
+                ]
+            ]
+        ]
+    ];
     /**
      * @throws \InvalidArgumentException
      */
     public function testConfigThrowsErrorWithWrongParameter()
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('The file fileNotExisting not exists!');
-        Config::loadFromFile('fileNotExisting');
+        $this->expectExceptionMessage('The file fileNotExisting does not exists !');
+        Config::loadFromJSONFile('fileNotExisting');
+    }
+
+    public function testConfigFileCanReadAndReturnDataOfAJsonFile()
+    {
+        $result = Config::loadFromJSONFile(__DIR__ . '/../../Fixtures/router.json');
+        self::assertSame($this->expectedData, $result);
     }
 
     public function testConfigFileCanReadAndReturnDataOfAYamlFile()
     {
-        $expected = [
-            'base_path' => '/blog',
-            'routes'    => [
-                'index' => [
-                    '/index',
-                    'Controller.method',
-                    'GET'
-                ],
-                'contact' => [
-                    '/contact',
-                    'someClass.contactAction',
-                    'GET',
-                ],
-                'about' => [
-                    '/about',
-                    'someClass.aboutAction',
-                    'GET',
-                ]
-            ]
-        ];
-        $result = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
-
-        self::assertSame($expected, $result);
+        $result = Config::loadFromYAMLFile(__DIR__ . '/../../Fixtures/router.yaml');
+        self::assertSame($this->expectedData, $result);
     }
 }

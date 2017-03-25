@@ -68,7 +68,7 @@ final class Config
     {
         $jsonConfig = json_decode(self::getConfigFileContents($jsonFile), true);
 
-        if(json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidArgumentException(sprintf('The content of the %s file is not a valid JSON !', $jsonFile));
         }
 

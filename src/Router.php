@@ -114,7 +114,7 @@ class Router
             }
 
             $route = rtrim($routes->getRegex(), '/');
-            $pattern = '@^' . $this->basePath . $route . '/?$@i';
+            $pattern = '@^' . preg_quote($this->basePath) . $route . '/?$@i';
             if (!preg_match($pattern, $requestUrl, $matches)) {
                 continue;
             }
@@ -196,15 +196,17 @@ class Router
     public static function parseConfig(array $config)
     {
         $collection = new RouteCollection();
+
         foreach ($config['routes'] as $name => $route) {
-            $collection->attachRoute(new Route($route[0], [
-                '_controller' => str_replace('.', '::', $route[1]),
-                'methods' => $route[2],
-                'name' => $name
-            ]));
+            if (!isset($route['route'])) {
+                throw new InvalidArgumentException(sprintf('You must specifying a route for %s !', $name));
+            }
+
+            $collection->attachRoute(new Route($route['route'], $route));
         }
 
         $router = new Router($collection);
+
         if (isset($config['base_path'])) {
             $router->setBasePath($config['base_path']);
         }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,6 +19,7 @@
 namespace PHPRouter;
 
 use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -38,17 +40,60 @@ final class Config
     }
 
     /**
-     * @param string $yamlFile file location.
+     * Load config from YAML file
+     * @since 1.3.0
+     * @param string $yamlFile File location
      * @throws InvalidArgumentException
      *
-     * @return mixed[]
+     * @return array Router configuration
      */
-    public static function loadFromFile($yamlFile)
+    public static function loadFromYAMLFile(string $yamlFile) : array
     {
-        if (!is_file($yamlFile)) {
-            throw new InvalidArgumentException(sprintf('The file %s not exists!', $yamlFile));
+        if (!$yamlConfig = Yaml::parse(self::getConfigFileContents($yamlFile))) {
+            throw new InvalidArgumentException(sprintf('The content of the %s file is not a valid YAML !', $yamlFile));
         }
 
-        return Yaml::parse(file_get_contents($yamlFile));
+        return $yamlConfig;
+    }
+
+    /**
+     * Load config from JSON file
+     * @since 1.3.0
+     * @param string $jsonFile File location
+     * @throws InvalidArgumentException
+     *
+     * @return array Router configuration
+     */
+    public static function loadFromJSONFile(string $jsonFile) : array
+    {
+        $jsonConfig = json_decode(self::getConfigFileContents($jsonFile), true);
+
+        if(json_last_error() !== JSON_ERROR_NONE) {
+            throw new InvalidArgumentException(sprintf('The content of the %s file is not a valid JSON !', $jsonFile));
+        }
+
+        return $jsonConfig;
+    }
+
+    /**
+     * Load config file and return it's contents
+     * @since 1.3.0
+     * @param string $file File location
+     * @codeCoverageIgnore
+     * @throws InvalidArgumentException | RuntimeException
+     *
+     * @return string File contents
+     */
+    private function getConfigFileContents(string $file) : string
+    {
+        if (!is_file($file)) {
+            throw new InvalidArgumentException(sprintf('The file %s does not exists !', $file));
+        }
+
+        if (!is_readable($file)) {
+            throw new RuntimeException(sprintf('The file %s is not readable !', $file));
+        }
+
+        return file_get_contents($file);
     }
 }

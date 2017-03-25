@@ -15,12 +15,12 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouterTest\Test;
+namespace PHPRouterTest;
 
 use PHPRouter\Route;
 use PHPUnit\Framework\TestCase;
 
-class RouteTest extends TestCase
+final class RouteTest extends TestCase
 {
     private $routeWithParameters;
     private $routeWithoutAction;
@@ -29,26 +29,26 @@ class RouteTest extends TestCase
     {
         $this->routeWithParameters = new Route(
             '/page/:page_id',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController::page',
-                'methods' => array(
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController::page',
+                'methods' => [
                     'GET'
-                ),
+                ],
                 'target' => 'thisIsAString',
                 'name' => 'page'
-            )
+            ]
         );
 
         $this->routeWithoutAction = new Route(
             '/page/:page_id',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController',
-                'methods' => array(
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController',
+                'methods' => [
                     'GET'
-                ),
+                ],
                 'target' => 'thisIsAString',
                 'name' => 'page'
-            )
+            ]
         );
     }
 
@@ -68,16 +68,16 @@ class RouteTest extends TestCase
 
     public function testGetMethods()
     {
-        self::assertEquals(array('GET'), $this->routeWithParameters->getMethods());
+        self::assertEquals(['GET'], $this->routeWithParameters->getMethods());
     }
 
     public function testSetMethods()
     {
-        $this->routeWithParameters->setMethods(array('POST'));
-        self::assertEquals(array('POST'), $this->routeWithParameters->getMethods());
+        $this->routeWithParameters->setMethods(['POST']);
+        self::assertEquals(['POST'], $this->routeWithParameters->getMethods());
 
-        $this->routeWithParameters->setMethods(array('GET', 'POST', 'PUT', 'DELETE'));
-        self::assertEquals(array('GET', 'POST', 'PUT', 'DELETE'), $this->routeWithParameters->getMethods());
+        $this->routeWithParameters->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
+        self::assertEquals(['GET', 'POST', 'PUT', 'DELETE'], $this->routeWithParameters->getMethods());
     }
 
     public function testGetTarget()
@@ -105,19 +105,19 @@ class RouteTest extends TestCase
     public function testGetAction()
     {
         self::assertEquals('page', $this->routeWithParameters->getAction());
-        self::assertEquals('__construct', $this->routeWithoutAction->getAction());
+        self::assertEquals(null, $this->routeWithoutAction->getAction());
     }
 
     public function testGetController()
     {
-        self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithParameters->getController());
-        self::assertEquals('PHPRouter\Test\SomeController', $this->routeWithoutAction->getController());
+        self::assertEquals('PHPRouterFixtures\SomeController', $this->routeWithParameters->getController());
+        self::assertEquals('PHPRouterFixtures\SomeController', $this->routeWithoutAction->getController());
     }
 
     public function testSetController()
     {
-        $this->routeWithParameters->setController('PHPRouter\Test\anotherController');
-        self::assertEquals('PHPRouter\Test\anotherController', $this->routeWithParameters->getController());
+        $this->routeWithParameters->setController('PHPRouterFixtures\anotherController');
+        self::assertEquals('PHPRouterFixtures\anotherController', $this->routeWithParameters->getController());
     }
 
     public function testSetAction()

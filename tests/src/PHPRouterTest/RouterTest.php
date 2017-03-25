@@ -15,7 +15,7 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouterTest\Test;
+namespace PHPRouterTest;
 
 use PHPRouter\Config;
 use PHPRouter\Route;
@@ -23,7 +23,7 @@ use PHPRouter\Router;
 use PHPRouter\RouteCollection;
 use PHPUnit\Framework\TestCase;
 
-class RouterTest extends TestCase
+final class RouterTest extends TestCase
 {
     /**
      * @dataProvider matcherProvider
@@ -54,10 +54,10 @@ class RouterTest extends TestCase
     public function testMatchRouterUsingBasePath()
     {
         $collection = new RouteCollection();
-        $collection->attach(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
+        $collection->attach(new Route('/users/', [
+            '_controller' => 'PHPRouterFixtures\SomeController::usersCreate',
             'methods' => 'GET'
-        )));
+        ]));
 
         $router = new Router($collection);
         $router->setBasePath('/localhost/webroot');
@@ -70,18 +70,18 @@ class RouterTest extends TestCase
 
     private function serverProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/localhost/webroot/users/',
                 'SCRIPT_NAME' => 'index.php'
-            ),
-            array(
+            ],
+            [
                 'REQUEST_METHOD' => 'GET',
                 'REQUEST_URI' => '/localhost/webroot/users/?foo=bar&bar=foo',
                 'SCRIPT_NAME' => 'index.php'
-            ),
-        );
+            ],
+        ];
     }
 
     public function testGetParamsInsideControllerMethod()
@@ -89,17 +89,17 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route(
             '/page/:page_id',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController::page',
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController::page',
                 'methods' => 'GET'
-            )
+            ]
         );
-        $route->setFilters(array(':page_id' => '([a-zA-Z]+)'), true);
+        $route->setFilters([':page_id' => '([a-zA-Z]+)'], true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);
         self::assertEquals(
-            array(array('page_id' => 'MySuperPage')),
+            [['page_id' => 'MySuperPage']],
             $router->match('/page/MySuperPage')->getParameters()
         );
     }
@@ -109,27 +109,27 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route(
             '/js/:filename',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController::dynamicFilterUrlMatch',
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController::dynamicFilterUrlMatch',
                 'methods' => 'GET',
-            )
+            ]
         );
-        $route->setFilters(array(':filename' => '([[:alnum:].]+).js'), true);
+        $route->setFilters([':filename' => '([[:alnum:].]+).js'], true);
         $collection->attachRoute($route);
 
         $router = new Router($collection);
         self::assertEquals(
-            array(array('filename' => 'someJsFile')),
+            [['filename' => 'someJsFile']],
             $router->match('/js/someJsFile.js')->getParameters()
         );
 
         self::assertEquals(
-            array(array('filename' => 'someJsFile.min')),
+            [['filename' => 'someJsFile.min']],
             $router->match('/js/someJsFile.min.js')->getParameters()
         );
 
         self::assertEquals(
-            array(array('filename' => 'someJsFile.min.js')),
+            [['filename' => 'someJsFile.min.js']],
             $router->match('/js/someJsFile.min.js.js')->getParameters()
         );
     }
@@ -139,10 +139,10 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route(
             '/test/params',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController::page',
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController::page',
                 'methods' => 'GET',
-            )
+            ]
         );
         $route->setParameters(['myParam' => 'isOK']);
         $collection->attachRoute($route);
@@ -155,7 +155,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testParseConfig()
+    public function testParseYAMLConfig()
     {
         $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
         $router = Router::parseConfig($config);
@@ -166,7 +166,7 @@ class RouterTest extends TestCase
     {
         $router = $this->getRouter();
         self::assertSame('/users/', $router->generate('users'));
-        self::assertSame('/user/123', $router->generate('user', array('id' => 123)));
+        self::assertSame('/user/123', $router->generate('user', ['id' => 123]));
     }
 
     /**
@@ -186,13 +186,13 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $route = new Route(
             '/user/:user_id',
-            array(
-                '_controller' => 'PHPRouter\Test\SomeController::dynamicFilterUrlMatch',
+            [
+                '_controller' => 'PHPRouterFixtures\SomeController::dynamicFilterUrlMatch',
                 'methods' => 'GET',
-            )
+            ]
         );
         $route->setFiltersRegex(':([a-z]+):');
-        $route->setFilters(array(':filename' => '([[:alnum:].]+).js'), true);
+        $route->setFilters([':filename' => '([[:alnum:].]+).js'], true);
     }
 
     /**
@@ -201,21 +201,21 @@ class RouterTest extends TestCase
     private function getRouter()
     {
         $collection = new RouteCollection();
-        $collection->attachRoute(new Route('/users/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::usersCreate',
+        $collection->attachRoute(new Route('/users/', [
+            '_controller' => 'PHPRouterFixtures\SomeController::usersCreate',
             'methods' => 'GET',
             'name' => 'users'
-        )));
-        $collection->attachRoute(new Route('/user/:id', array(
-            '_controller' => 'PHPRouter\Test\SomeController::user',
+        ]));
+        $collection->attachRoute(new Route('/user/:id', [
+            '_controller' => 'PHPRouterFixtures\SomeController::user',
             'methods' => 'GET',
             'name' => 'user'
-        )));
-        $collection->attachRoute(new Route('/', array(
-            '_controller' => 'PHPRouter\Test\SomeController::indexAction',
+        ]));
+        $collection->attachRoute(new Route('/', [
+            '_controller' => 'PHPRouterFixtures\SomeController::indexAction',
             'methods' => 'GET',
             'name' => 'index'
-        )));
+        ]));
 
         return new Router($collection);
     }
@@ -227,15 +227,15 @@ class RouterTest extends TestCase
     {
         $router = $this->getRouter();
 
-        return array(
-            array($router, '', true),
-            array($router, '/', true),
-            array($router, '/aaa', false),
-            array($router, '/users', true),
-            array($router, '/usersssss', false),
-            array($router, '/user/1', true),
-            array($router, '/user/%E3%81%82', true),
-        );
+        return [
+            [$router, '', true],
+            [$router, '/', true],
+            [$router, '/aaa', false],
+            [$router, '/users', true],
+            [$router, '/usersssss', false],
+            [$router, '/user/1', true],
+            [$router, '/user/%E3%81%82', true],
+        ];
     }
 
     /**
@@ -246,20 +246,20 @@ class RouterTest extends TestCase
         $router = $this->getRouter();
         $router->setBasePath('/api');
 
-        return array(
-            array($router, '', false),
-            array($router, '/', false),
-            array($router, '/aaa', false),
-            array($router, '/users', false),
-            array($router, '/user/1', false),
-            array($router, '/user/%E3%81%82', false),
-            array($router, '/api', true),
-            array($router, '/api/aaa', false),
-            array($router, '/api/users', true),
-            array($router, '/api/userssss', false),
-            array($router, '/api/user/1', true),
-            array($router, '/api/user/%E3%81%82', true),
-        );
+        return [
+            [$router, '', false],
+            [$router, '/', false],
+            [$router, '/aaa', false],
+            [$router, '/users', false],
+            [$router, '/user/1', false],
+            [$router, '/user/%E3%81%82', false],
+            [$router, '/api', true],
+            [$router, '/api/aaa', false],
+            [$router, '/api/users', true],
+            [$router, '/api/userssss', false],
+            [$router, '/api/user/1', true],
+            [$router, '/api/user/%E3%81%82', true],
+        ];
     }
 
     /**

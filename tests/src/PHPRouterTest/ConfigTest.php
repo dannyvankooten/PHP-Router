@@ -15,7 +15,7 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-namespace PHPRouterTest\Test;
+namespace PHPRouterTest;
 
 use PHPRouter\Config;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * @author Jefersson Nathan <malukenho@phpse.net>
  * @package PHPRouter\Test
  */
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     /**
      * @throws \InvalidArgumentException

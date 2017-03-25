@@ -44,5 +44,11 @@
         "psr-4": {
             "PHPRouter\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PHPRouterTest\\": "tests/src/PHPRouterTest/",
+            "PHPRouterFixtures\\": "tests/Fixtures/"
+        }
     }
 }

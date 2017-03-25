@@ -84,7 +84,7 @@ final class Config
      *
      * @return string File contents
      */
-    private function getConfigFileContents(string $file) : string
+    private static function getConfigFileContents(string $file) : string
     {
         if (!is_file($file)) {
             throw new InvalidArgumentException(sprintf('The file %s does not exists !', $file));

@@ -1,0 +1,31 @@
+{
+	"base_path": "/blog",
+	"routes": {
+		"index": {
+			"route": "/index",
+			"_controller": "someController",
+			"methods": [
+				"GET"
+			]
+		},
+		"article": {
+			"route": "/article/:id/:title_slug",
+			"_controller": "PHPRouterFixtures\\someControllerdynamic::FilterUrlMatch",
+			"methods": [
+				"GET"
+			],
+			"filters": {
+				":id": "([\\d]+)",
+				":title_slug": "([[:alnum:]_-]+)"
+			}
+		},
+		"contact": {
+			"route": "/contact",
+			"_controller": "PHPRouterFixtures\\someController::page",
+			"methods": [
+				"GET",
+                "POST"
+			]
+		}
+	}
+}

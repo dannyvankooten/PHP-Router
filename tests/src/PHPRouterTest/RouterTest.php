@@ -155,9 +155,16 @@ final class RouterTest extends TestCase
         );
     }
 
+    public function testParseJSONConfig()
+    {
+        $config = Config::loadFromJSONFile(__DIR__ . '/../../Fixtures/router.json');
+        $router = Router::parseConfig($config);
+        self::assertAttributeEquals($config['base_path'], 'basePath', $router);
+    }
+
     public function testParseYAMLConfig()
     {
-        $config = Config::loadFromFile(__DIR__ . '/../../Fixtures/router.yaml');
+        $config = Config::loadFromYAMLFile(__DIR__ . '/../../Fixtures/router.yaml');
         $router = Router::parseConfig($config);
         self::assertAttributeEquals($config['base_path'], 'basePath', $router);
     }

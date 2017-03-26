@@ -46,10 +46,10 @@ class Route
     ];
 
     /**
-     * Controller class
+     * Target controller class
      * @var string
      */
-    private $controller;
+    private $controllerClassName;
 
     /**
     * Method called into the controller class
@@ -120,7 +120,7 @@ class Route
 
         $action = explode(self::ACTION_SEPARATOR, $this->config['_controller']);
         $this->controller = $action[0];
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : '__construct';
+        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
     }
 
     public function getUrl()
@@ -221,7 +221,7 @@ class Route
 
     public function dispatch()
     {
-        $controller = $this->controller;
+        $controllerClassName = $this->controller;
 
         // Merge parameters set from config and parameters given by filters
         // filter overload custom params
@@ -231,7 +231,7 @@ class Route
             $this->parameters = [$this->parameters];
         }
 
-        $instance = new $controller;
+        $instance = new $controllerClassName;
         call_user_func_array([$instance, $this->action], $this->parameters);
     }
 

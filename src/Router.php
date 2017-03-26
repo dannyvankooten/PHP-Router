@@ -71,7 +71,7 @@ class Router
     /**
      * Matches the current request against mapped routes
      */
-    public function matchCurrentRequest()
+    public function matchCurrentRequest() : Route
     {
         $requestMethod = (
             isset($_POST['_method'])
@@ -99,7 +99,7 @@ class Router
      *
      * @return bool|Route
      */
-    public function match($requestUrl, $requestMethod = RequestMethodInterface::METHOD_GET)
+    public function match(string $requestUrl, $requestMethod = RequestMethodInterface::METHOD_GET)
     {
         $currentDir = dirname($_SERVER['SCRIPT_NAME']);
 
@@ -153,14 +153,14 @@ class Router
     /**
      * Reverse route a named route
      *
-     * @param $routeName
+     * @param string $routeName
      * @param array $params Optional array of parameters to use in URL
      *
      * @throws Exception
      *
      * @return string The url to the route
      */
-    public function generate($routeName, array $params = [])
+    public function generate(string $routeName, array $params = []) : string
     {
         // Check if route exists
         if (!isset($this->namedRoutes[$routeName])) {
@@ -193,7 +193,7 @@ class Router
      * @param array $config provide by Config::loadFromFile()
      * @return Router
      */
-    public static function parseConfig(array $config)
+    public static function parseConfig(array $config) : Router
     {
         $collection = new RouteCollection();
 

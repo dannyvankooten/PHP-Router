@@ -177,7 +177,7 @@ class Router
             // loop trough parameter names, store matching value in $params array
             foreach ($param_keys as $key) {
                 if (isset($params[$key])) {
-                    $url = preg_replace('/:(\w+)/', $params[$key], $url, 1);
+                    $url = preg_replace('/:'.preg_quote($key).'/', $params[$key], $url, 1);
                 }
             }
         }

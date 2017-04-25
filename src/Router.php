@@ -19,6 +19,7 @@ namespace PHPRouter;
 
 use Exception;
 use Fig\Http\Message\RequestMethodInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Routing class to match request URL's against given routes and map them to a controller action.
@@ -45,18 +46,27 @@ class Router
     private $basePath = '';
 
     /**
-     * @param RouteCollection $collection
+     * @var ContainerInterface
      */
-    public function __construct(RouteCollection $collection)
+    private $container;
+
+    /**
+     * @param RouteCollection    $collection
+     * @param ContainerInterface $container
+     */
+    public function __construct(RouteCollection $collection, ContainerInterface $container = null)
     {
         $this->routes = $collection;
 
+        // @todo remove this heavy operation from construct
         foreach ($this->routes->all() as $route) {
             $name = $route->getName();
             if (null !== $name) {
                 $this->namedRoutes[$name] = $route;
             }
         }
+
+        $this->container = $container;
     }
 
     /**

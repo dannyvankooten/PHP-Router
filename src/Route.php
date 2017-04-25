@@ -19,6 +19,8 @@ namespace PHPRouter;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Exception;
+use Interop\Container\ContainerInterface;
+use SebastianBergmann\GlobalState\RuntimeException;
 
 class Route
 {
@@ -29,10 +31,14 @@ class Route
     private $url;
 
     /**
-     * Accepted HTTP methods for this route.
      * @var string[]
      */
-    private $methods = array(
+    private $methods;
+
+    /**
+     * @var string[]
+     */
+    private $httpMethods = array(
         RequestMethodInterface::METHOD_GET,
         RequestMethodInterface::METHOD_POST,
         RequestMethodInterface::METHOD_PUT,
@@ -76,17 +82,42 @@ class Route
     private $config;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var string
+     */
+    private $action;
+
+    /**
+     * @var string
+     */
+    private $controller;
+
+    /**
      * @param       $resource
      * @param array $config
      */
     public function __construct($resource, array $config)
     {
-        $this->url        = $resource;
-        $this->config     = $config;
+        $this->url    = $resource;
+        $this->config = $config;
+
+        list($controller, $action) = explode('::', $this->config['_controller']);
+
+        $this->controller = $controller;
+        $this->action     = $action;
         $this->methods    = isset($config['methods']) ? (array) $config['methods'] : array();
         $this->target     = isset($config['target']) ? $config['target'] : null;
         $this->name       = isset($config['name']) ? $config['name'] : null;
         $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
+    }
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
     }
 
     public function getUrl()
@@ -187,24 +218,38 @@ class Route
 
     public function dispatch()
     {
-        $action = explode('::', $this->config['_controller']);
+        if (null === $this->getAction()) {
+            throw new RuntimeException(
+                sprintf('Could not find an action to controller "%s"', $this->controller)
+            );
+        }
 
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
+        $controller = $this->controller;
 
-        if (!is_null($this->action)) {
-            $instance = new $action[0];
-            call_user_func_array(array($instance, $this->action), $this->parameters);
+        if ($this->container && $this->container->has($controller)) {
+            $instance = $this->container->get($controller);
         } else {
-            $instance = new $action[0]($this->parameters);
+            $instance = new $controller;
         }
+
+        if (method_exists($this, $this->getAction())){
+            call_user_func_array(
+                array($instance, $this->getAction()),
+                $this->parameters
+            );
+
+            return;
+        }
+
+        new $controller($this->parameters);
     }
 
     public function getAction()
     {
-        return $this->action;
+        return '' !== trim($this->action) ? $this->action : null;
     }
 }

@@ -120,6 +120,16 @@ $router = Router::parseConfig($config);
 $router->matchCurrentRequest();
 ```
 
+## Using a Service Container
+
+PHPRouter provides a way to work with Containers just by passing it via `PHPRouter\Router` constructor.
+
+```
+<?php
+
+$app = new Router($routes, $container);
+```
+
 ## More information
 
 If you like PHP Router you might also like [AltoRouter](//github.com/dannyvankooten/AltoRouter).

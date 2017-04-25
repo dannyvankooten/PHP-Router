@@ -31,10 +31,14 @@ class Route
     private $url;
 
     /**
-     * Accepted HTTP methods for this route.
      * @var string[]
      */
-    private $methods = array(
+    private $methods;
+
+    /**
+     * @var string[]
+     */
+    private $httpMethods = array(
         RequestMethodInterface::METHOD_GET,
         RequestMethodInterface::METHOD_POST,
         RequestMethodInterface::METHOD_PUT,

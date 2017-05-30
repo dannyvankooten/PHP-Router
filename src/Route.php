@@ -169,7 +169,7 @@ class Route
     private function validateFilters()
     {
         foreach($this->filters as $key => $reg) {
-            if(!preg_match('~^:([[a-z]])$~i', $key)) {
+            if(!preg_match('~^:([a-z]+)$~i', $key)) {
                 throw new Exception('Invalid filter name `'.$key.'` it should contains only letters and start with `:`');
             }
         }

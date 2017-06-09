@@ -233,7 +233,6 @@ class Router
      * The callable takes the dispatching route as first parameter.
      * It should return false to skip the route, or a Route in replacement of the passed Route.
      * @param callable $shouldDispatchCallback
-     * @return Router
      */
     public static function setShouldDispatchCallback(callable $shouldDispatchCallback){
         static::$shouldDispatchCallback = $shouldDispatchCallback;

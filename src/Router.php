@@ -45,6 +45,13 @@ class Router
     private $basePath = '';
 
     /**
+     * Callback called before dispatch. Should return the route to dispatch. 
+     * The choosen route for dispatch is the only parameter. 
+     * @var callable
+     */
+    private static $shouldDispatchCallback = null;
+
+    /**
      * @param RouteCollection $collection
      */
     public function __construct(RouteCollection $collection)
@@ -140,6 +147,17 @@ class Router
             }
 
             $routes->setParameters($params);
+
+            $shouldDispatchCallback = static::$shouldDispatchCallback;
+            //If shouldDispatch callback set, call it before dispatch
+            if($shouldDispatchCallback !== null){
+                $routes = $shouldDispatchCallback($routes);
+                //if false, ignore the route
+                if(!$routes){
+                    continue;
+                }
+            }
+
             $routes->dispatch();
 
             return $routes;
@@ -208,5 +226,16 @@ class Router
         }
 
         return $router;
+    }
+    
+    /**
+     * Sets a callback before dispatch to allow routing or not.
+     * The callable takes the dispatching route as first parameter.
+     * It should return false to skip the route, or a Route in replacement of the passed Route.
+     * @param callable $shouldDispatchCallback
+     * @return Router
+     */
+    public static function setShouldDispatchCallback(callable $shouldDispatchCallback){
+        static::$shouldDispatchCallback = $shouldDispatchCallback;
     }
 }

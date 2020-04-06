@@ -154,7 +154,7 @@ class Route
             return $this->filters[$matches[1]];
         }
 
-        return '([\w-%]+)';
+        return '([\w\-\%]+)';
     }
 
     /**

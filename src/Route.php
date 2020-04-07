@@ -17,9 +17,6 @@
  */
 namespace PHPRouter;
 
-use Fig\Http\Message\RequestMethodInterface;
-use Exception;
-
 class Route
 {
     /**
@@ -30,14 +27,10 @@ class Route
 
     /**
      * Accepted HTTP methods for this route.
+     *
      * @var string[]
      */
-    private $methods = array(
-        RequestMethodInterface::METHOD_GET,
-        RequestMethodInterface::METHOD_POST,
-        RequestMethodInterface::METHOD_PUT,
-        RequestMethodInterface::METHOD_DELETE,
-    );
+    private $methods;
 
     /**
      * Target for this route, can be anything.
@@ -71,6 +64,11 @@ class Route
     private $parametersByName;
 
     /**
+     * @var string
+     */
+    private $action;
+
+    /**
      * @var array
      */
     private $config;
@@ -87,6 +85,8 @@ class Route
         $this->target     = isset($config['target']) ? $config['target'] : null;
         $this->name       = isset($config['name']) ? $config['name'] : null;
         $this->parameters = isset($config['parameters']) ? $config['parameters'] : array();
+        $action           = explode('::', $this->config['_controller']);
+        $this->action     = isset($action[1]) ? $action[1] : null;
     }
 
     public function getUrl()
@@ -140,7 +140,6 @@ class Route
     {
         $this->filters          = $filters;
         $this->parametersByName = $parametersByName;
-        $this->validateFilters();
     }
 
     public function getRegex()
@@ -157,23 +156,6 @@ class Route
         return '([\w\-\%]+)';
     }
 
-    /**
-     * Validate filters to avoid wrong match while filters are not correctly defined
-     *
-     * @author Antoine Pous
-     * @since 1.3.0
-     * @param array $filters Filters to validate
-     * @throw Exception Invalid filter throw exception
-     * @return null
-     */
-    private function validateFilters()
-    {
-        foreach($this->filters as $key => $reg) {
-            if(!preg_match('/^:([a-z]+)/i', $key)) {
-                throw new Exception('Invalid filter name `'.$key.'` it should contains only letters and start with `:`');
-            }
-        }
-    }
 
     public function getParameters()
     {
@@ -182,25 +164,25 @@ class Route
 
     public function setParameters(array $parameters)
     {
-        $this->parameters = array_merge($this->parameters, $parameters);
+        $this->parameters = $parameters;
     }
 
     public function dispatch()
     {
         $action = explode('::', $this->config['_controller']);
+        $instance = new $action[0];
 
         if ($this->parametersByName) {
             $this->parameters = array($this->parameters);
         }
 
-        $this->action = !empty($action[1]) && trim($action[1]) !== '' ? $action[1] : null;
+        if (empty($action[1]) || trim($action[1]) === '') {
+            call_user_func_array($instance, $this->parameters);
 
-        if (!is_null($this->action)) {
-            $instance = new $action[0];
-            call_user_func_array(array($instance, $this->action), $this->parameters);
-        } else {
-            $instance = new $action[0]($this->parameters);
+            return ;
         }
+
+        call_user_func_array(array($instance, $action[1]), $this->parameters);
     }
 
     public function getAction()

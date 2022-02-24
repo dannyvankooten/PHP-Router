@@ -181,7 +181,7 @@ class Route
             return ;
         }
 
-        call_user_func_array(array($instance, $action[1]), $this->parameters);
+        call_user_func_array(array($instance, $action[1]), array_values($this->parameters));
     }
 
     public function getAction()

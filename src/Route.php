@@ -152,7 +152,7 @@ class Route
             return $this->filters[$matches[1]];
         }
 
-        return '([\w-%]+)';
+        return '([\w%-]+)';
     }
 
     public function getParameters()
@@ -177,7 +177,7 @@ class Route
 
         if (!is_null($this->action)) {
             $instance = new $action[0];
-            call_user_func_array(array($instance, $this->action), $this->parameters);
+            call_user_func_array(array($instance, $this->action), array_values($this->parameters));
         } else {
             $instance = new $action[0]($this->parameters);
         }

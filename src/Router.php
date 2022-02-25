@@ -121,7 +121,7 @@ class Router
 
             $params = array();
 
-            if (preg_match_all('/:([\w-%]+)/', $routes->getUrl(), $argument_keys)) {
+            if (preg_match_all('/:([\w%-]+)/', $routes->getUrl(), $argument_keys)) {
                 // grab array with matches
                 $argument_keys = $argument_keys[1];
 
